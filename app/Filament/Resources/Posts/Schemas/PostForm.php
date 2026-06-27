@@ -49,9 +49,12 @@ class PostForm
                     ->multiple()
                     ->maxFiles(5)
                     ->maxSize(2048)
+                    ->disk('public')
                     ->directory('news-images')
                     ->columnSpanFull(),
                 RichEditor::make('content')
+                    ->fileAttachmentsDisk('public')
+                    ->fileAttachmentsDirectory('news-images')
                     ->columnSpanFull(),
                 DateTimePicker::make('published_at')
                     ->label('Publish Date (Leave empty to publish immediately if status is Published)'),
