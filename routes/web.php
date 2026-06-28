@@ -12,8 +12,9 @@ Route::get('/', function () {
         ->where('published_at', '<=', now())
         ->latest('published_at')
         ->get();
-        
-    $featuredPost = $allPosts->first();
+
+    // Hero section: first 6 posts for carousel (3 slides × 2 posts)
+    $heroPosts = $allPosts->take(6);
     
     // Top posts by views_count
     $topPosts = Post::with(['user', 'category'])
@@ -26,7 +27,7 @@ Route::get('/', function () {
         
     $otherPosts = $allPosts->slice(6);
 
-    return view('welcome', compact('categories', 'featuredPost', 'topPosts', 'otherPosts'));
+    return view('welcome', compact('categories', 'heroPosts', 'topPosts', 'otherPosts'));
 })->name('home');
 
 Route::view('/about', 'about')->name('about');

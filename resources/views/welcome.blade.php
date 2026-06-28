@@ -1,9 +1,112 @@
 @extends('layouts.public')
 
+@section('hero')
+{{-- ============================================
+     HERO SECTION — 2-Up Carousel (max 6 posts, 3 slides)
+     ============================================ --}}
+@if($heroPosts && $heroPosts->count() > 0)
+    @php
+        $heroChunks = $heroPosts->chunk(2);
+        $totalSlides = $heroChunks->count();
+    @endphp
+
+    {{-- Section label --}}
+    <div class="hero-section-label">
+        <div class="hero-section-label__text">
+            <span class="hero-live-dot"></span>
+            <span>Berita Terkini</span>
+            <span class="hero-section-label__line"></span>
+        </div>
+    </div>
+
+    {{-- Carousel --}}
+    <div class="hero-carousel" id="heroCarousel" data-total-slides="{{ $totalSlides }}">
+        {{-- Track --}}
+        <div class="hero-carousel__track" id="heroTrack">
+            @foreach($heroChunks as $slideIndex => $chunk)
+                <div class="hero-carousel__slide">
+                    @foreach($chunk as $post)
+                        @php
+                            $postImage = is_array($post->image) ? ($post->image[0] ?? null) : $post->image;
+                            $excerpt = $post->content ? Str::limit(strip_tags($post->content), 120, '...') : '';
+                        @endphp
+
+                        <div>
+                            <a href="{{ route('posts.show', $post->slug) }}" class="hero-card">
+                                {{-- Photo --}}
+                                @if($postImage)
+                                    <img src="{{ Storage::url($postImage) }}"
+                                         alt="{{ $post->title }}"
+                                         class="hero-card__image"
+                                         loading="{{ $slideIndex === 0 ? 'eager' : 'lazy' }}"
+                                         decoding="async">
+                                @else
+                                    <div class="hero-card__noimage">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                @endif
+
+                                {{-- Gradient Overlay --}}
+                                <div class="hero-card__overlay"></div>
+
+                                {{-- Content --}}
+                                <div class="hero-card__content">
+                                    @if($post->category)
+                                        <span class="hero-card__category">{{ $post->category->name }}</span>
+                                    @endif
+
+                                    <h2 class="hero-card__title">{{ $post->title }}</h2>
+
+                                    @if($excerpt)
+                                        <p class="hero-card__excerpt">{{ $excerpt }}</p>
+                                    @endif
+
+                                    <div class="hero-card__meta">
+                                        <span>{{ $post->user->name }}</span>
+                                        <span class="hero-card__meta-dot"></span>
+                                        <span>{{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            @endforeach
+        </div>
+
+        {{-- Navigation Arrows --}}
+        @if($totalSlides > 1)
+            <button class="hero-carousel__nav hero-carousel__nav--prev" id="heroPrev" aria-label="Previous slide">
+                <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+                </svg>
+            </button>
+            <button class="hero-carousel__nav hero-carousel__nav--next" id="heroNext" aria-label="Next slide">
+                <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                </svg>
+            </button>
+
+            {{-- Dot indicators --}}
+            <div class="hero-carousel__dots" id="heroDots">
+                @for($i = 0; $i < $totalSlides; $i++)
+                    <button class="hero-carousel__dot {{ $i === 0 ? 'is-active' : '' }}"
+                            data-slide="{{ $i }}"
+                            aria-label="Go to slide {{ $i + 1 }}"></button>
+                @endfor
+            </div>
+        @endif
+    </div>
+@endif
+@endsection
+
 @section('content')
 <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
     
-    <!-- Category Navigation -->
+    {{-- Category Navigation --}}
     <div class="mb-10 flex space-x-2 overflow-x-auto pb-4 scrollbar-hide">
         <a href="{{ route('home') }}" class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold transition-colors bg-black text-white">All</a>
         @foreach($categories as $cat)
@@ -11,42 +114,8 @@
         @endforeach
     </div>
 
-    @if($featuredPost)
-        <!-- Featured Post -->
-        <div class="mb-16 group relative block rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 bg-white">
-            <a href="{{ route('posts.show', $featuredPost->slug) }}" class="block relative w-full h-[60vh] md:h-[70vh]">
-                @if($featuredPost->image)
-                    @php $featuredImage = is_array($featuredPost->image) ? $featuredPost->image[0] : $featuredPost->image; @endphp
-                    <img src="{{ Storage::url($featuredImage) }}" alt="{{ $featuredPost->title }}" class="absolute inset-0 w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105">
-                @else
-                    <div class="absolute inset-0 bg-gray-200 flex items-center justify-center">
-                        <span class="text-gray-400">No Image</span>
-                    </div>
-                @endif
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-                    @if($featuredPost->category)
-                        <span class="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-wider text-rose-600 bg-white rounded-full uppercase shadow-sm">
-                            {{ $featuredPost->category->name }}
-                        </span>
-                    @endif
-                    <h2 class="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-4 drop-shadow-md">{{ $featuredPost->title }}</h2>
-                    <div class="flex items-center gap-3 text-white">
-                        <div class="w-10 h-10 rounded-full bg-rose-500 flex items-center justify-center text-sm font-bold shadow-sm">
-                            {{ substr($featuredPost->user->name, 0, 1) }}
-                        </div>
-                        <div>
-                            <p class="font-semibold">{{ $featuredPost->user->name }}</p>
-                            <p class="text-sm opacity-80">{{ $featuredPost->created_at->diffForHumans() }}</p>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-    @endif
-
     @if($topPosts && $topPosts->count() > 0)
-        <!-- Top Posts -->
+        {{-- Top Posts --}}
         <div class="mb-16">
             <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">Top Stories</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -72,7 +141,7 @@
     @endif
 
     @if($otherPosts && $otherPosts->count() > 0)
-        <!-- Other Posts Masonry -->
+        {{-- Other Posts Masonry --}}
         <div>
             <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">More News</h3>
             <div class="columns-1 sm:columns-2 lg:columns-4 gap-6 space-y-6">
@@ -99,7 +168,7 @@
         </div>
     @endif
     
-    @if(!$featuredPost && (!$topPosts || $topPosts->count() == 0))
+    @if((!$heroPosts || $heroPosts->count() == 0) && (!$topPosts || $topPosts->count() == 0))
         <div class="flex flex-col items-center justify-center py-20 text-center">
             <h3 class="text-xl font-semibold text-gray-900">No visual stories yet</h3>
             <p class="text-gray-500 mt-2">Check back later for breathtaking photo journalism.</p>
@@ -107,4 +176,136 @@
     @endif
 
 </main>
+@endsection
+
+@section('extra_js')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById('heroCarousel');
+    if (!carousel) return;
+
+    const track = document.getElementById('heroTrack');
+    const prevBtn = document.getElementById('heroPrev');
+    const nextBtn = document.getElementById('heroNext');
+    const dotsContainer = document.getElementById('heroDots');
+    const totalSlides = parseInt(carousel.dataset.totalSlides);
+
+    if (totalSlides < 2) return;
+
+    // --- Infinite loop: clone first & last slides ---
+    const slides = Array.from(track.children);
+    const firstClone = slides[0].cloneNode(true);
+    const lastClone = slides[slides.length - 1].cloneNode(true);
+    firstClone.setAttribute('aria-hidden', 'true');
+    lastClone.setAttribute('aria-hidden', 'true');
+    track.appendChild(firstClone);           // append clone of first at end
+    track.insertBefore(lastClone, slides[0]); // prepend clone of last at start
+
+    // With clones: [cloneLast] [slide0] [slide1] [slide2] [cloneFirst]
+    // Index 0 = cloneLast, 1..N = real slides, N+1 = cloneFirst
+    let index = 1; // start at first real slide
+    let isTransitioning = false;
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+
+    function setPosition(i, animate) {
+        if (animate) {
+            track.style.transition = 'transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        } else {
+            track.style.transition = 'none';
+        }
+        track.style.transform = `translateX(-${i * 100}%)`;
+    }
+
+    function updateDots() {
+        if (!dotsContainer) return;
+        // Map index to real slide: index 1..totalSlides => dot 0..totalSlides-1
+        let realIndex = index - 1;
+        if (realIndex < 0) realIndex = totalSlides - 1;
+        if (realIndex >= totalSlides) realIndex = 0;
+        dotsContainer.querySelectorAll('.hero-carousel__dot').forEach((dot, i) => {
+            dot.classList.toggle('is-active', i === realIndex);
+        });
+    }
+
+    function goTo(i) {
+        if (isTransitioning) return;
+        isTransitioning = true;
+        index = i;
+        setPosition(index, true);
+        updateDots();
+    }
+
+    // After transition ends, snap to real slide if on a clone
+    track.addEventListener('transitionend', () => {
+        isTransitioning = false;
+        if (index === 0) {
+            // On cloneLast -> jump to real last
+            index = totalSlides;
+            setPosition(index, false);
+        } else if (index === totalSlides + 1) {
+            // On cloneFirst -> jump to real first
+            index = 1;
+            setPosition(index, false);
+        }
+    });
+
+    // Initialize position (no animation)
+    setPosition(index, false);
+    updateDots();
+
+    // Arrow clicks
+    prevBtn.addEventListener('click', () => goTo(index - 1));
+    nextBtn.addEventListener('click', () => goTo(index + 1));
+
+    // Dot clicks
+    if (dotsContainer) {
+        dotsContainer.addEventListener('click', (e) => {
+            const dot = e.target.closest('.hero-carousel__dot');
+            if (dot) goTo(parseInt(dot.dataset.slide) + 1); // +1 because of prepended clone
+        });
+    }
+
+    // Touch swipe
+    carousel.addEventListener('touchstart', (e) => {
+        if (isTransitioning) return;
+        startX = e.touches[0].clientX;
+        isDragging = true;
+        track.style.transition = 'none';
+    }, { passive: true });
+
+    carousel.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        currentX = e.touches[0].clientX;
+        const diff = currentX - startX;
+        const offset = -(index * 100) + (diff / carousel.offsetWidth * 100);
+        track.style.transform = `translateX(${offset}%)`;
+    }, { passive: true });
+
+    carousel.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        const diff = currentX - startX;
+        const threshold = carousel.offsetWidth * 0.15;
+
+        if (diff < -threshold) {
+            goTo(index + 1);
+        } else if (diff > threshold) {
+            goTo(index - 1);
+        } else {
+            goTo(index); // snap back
+        }
+        startX = 0;
+        currentX = 0;
+    });
+
+    // Keyboard nav
+    carousel.setAttribute('tabindex', '0');
+    carousel.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') goTo(index - 1);
+        if (e.key === 'ArrowRight') goTo(index + 1);
+    });
+});
+</script>
 @endsection

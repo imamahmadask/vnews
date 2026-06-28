@@ -47,8 +47,10 @@
         </div>
     </nav>
 
+    @yield('hero')
     @yield('content')
 
+    @yield('extra_js')
     <footer class="border-t border-gray-100 py-12 mt-auto bg-white">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <p class="text-sm text-gray-400">

@@ -8,3 +8,392 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* ============================================
+   HERO CAROUSEL — 2-up Swipeable Slider
+   ============================================ */
+
+.hero-carousel {
+    position: relative;
+    background-color: #0a0a0a;
+    height: calc(100svh - 118px);
+    max-height: 820px;
+    min-height: 420px;
+    overflow: hidden;
+}
+
+.hero-carousel__track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+}
+
+.hero-carousel__track.is-dragging {
+    transition: none;
+}
+
+/* Each slide = 2 photos side by side */
+.hero-carousel__slide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 0;
+}
+
+/* Mobile: stack vertically */
+@media (max-width: 767px) {
+    .hero-carousel {
+        height: auto;
+        max-height: none;
+        min-height: unset;
+    }
+
+    .hero-carousel__slide {
+        grid-template-columns: 1fr;
+        gap: 2px;
+    }
+
+    .hero-carousel__slide > * {
+        height: 56vw;
+        min-height: 220px;
+    }
+}
+
+/* ============================================
+   HERO CARD — Individual photo card
+   ============================================ */
+
+.hero-card {
+    position: relative;
+    overflow: hidden;
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.hero-card__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                filter 0.5s ease;
+    will-change: transform;
+}
+
+.hero-card:hover .hero-card__image {
+    transform: scale(1.05);
+}
+
+.hero-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.82) 0%,
+        rgba(0, 0, 0, 0.35) 40%,
+        rgba(0, 0, 0, 0.05) 70%,
+        transparent 100%
+    );
+    z-index: 1;
+    transition: background 0.4s ease;
+}
+
+.hero-card:hover .hero-card__overlay {
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.45) 40%,
+        rgba(0, 0, 0, 0.1) 70%,
+        transparent 100%
+    );
+}
+
+.hero-card__content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    z-index: 2;
+    transform: translateY(0);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hero-card:hover .hero-card__content {
+    transform: translateY(-4px);
+}
+
+@media (max-width: 767px) {
+    .hero-card__content {
+        padding: 1.25rem;
+    }
+}
+
+/* Category badge */
+.hero-card__category {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    margin-bottom: 0.75rem;
+    transition: background-color 0.3s ease;
+}
+
+.hero-card:hover .hero-card__category {
+    background-color: rgba(225, 29, 72, 0.85);
+    border-color: rgba(225, 29, 72, 0.9);
+}
+
+/* Title */
+.hero-card__title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: clamp(1.25rem, 2.5vw, 2.25rem);
+    -webkit-line-clamp: 3;
+}
+
+@media (max-width: 767px) {
+    .hero-card__title {
+        font-size: clamp(1.1rem, 5vw, 1.5rem);
+        -webkit-line-clamp: 2;
+    }
+}
+
+/* Excerpt */
+.hero-card__excerpt {
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-weight: 300;
+}
+
+@media (max-width: 1024px) {
+    .hero-card__excerpt {
+        display: none;
+    }
+}
+
+/* Meta info */
+.hero-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 400;
+}
+
+.hero-card__meta-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.4);
+    flex-shrink: 0;
+}
+
+/* No-image fallback */
+.hero-card__noimage {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-card__noimage svg {
+    width: 48px;
+    height: 48px;
+    opacity: 0.2;
+    color: #fff;
+}
+
+/* ============================================
+   CAROUSEL CONTROLS
+   ============================================ */
+
+/* Navigation arrows */
+.hero-carousel__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+
+.hero-carousel:hover .hero-carousel__nav {
+    opacity: 1;
+}
+
+.hero-carousel__nav:hover {
+    background: rgba(225, 29, 72, 0.7);
+    border-color: rgba(225, 29, 72, 0.9);
+    transform: translateY(-50%) scale(1.08);
+}
+
+.hero-carousel__nav--prev {
+    left: 1rem;
+}
+
+.hero-carousel__nav--next {
+    right: 1rem;
+}
+
+.hero-carousel__nav svg {
+    width: 18px;
+    height: 18px;
+}
+
+
+/* Dot indicators */
+.hero-carousel__dots {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hero-carousel__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+}
+
+.hero-carousel__dot.is-active {
+    background: #fff;
+    width: 24px;
+    border-radius: 4px;
+}
+
+.hero-carousel__dot:hover:not(.is-active) {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+/* Mobile: always show nav */
+@media (max-width: 767px) {
+    .hero-carousel__nav {
+        opacity: 1;
+        width: 36px;
+        height: 36px;
+    }
+
+    .hero-carousel__nav svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .hero-carousel__dots {
+        bottom: 0.75rem;
+    }
+}
+
+/* ============================================
+   SECTION LABEL
+   ============================================ */
+
+.hero-section-label {
+    background-color: #0a0a0a;
+    padding: 0.85rem 1.25rem 0.5rem 1.25rem;
+}
+
+.hero-section-label__text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.hero-section-label__line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.15), transparent);
+}
+
+/* ============================================
+   LIVE INDICATOR
+   ============================================ */
+
+.hero-live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #e11d48;
+    animation: livePulse 2s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+}
+
+/* ============================================
+   ENTRANCE ANIMATION
+   ============================================ */
+
+@keyframes heroFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.hero-carousel {
+    animation: heroFadeIn 0.5s ease-out both;
+}
