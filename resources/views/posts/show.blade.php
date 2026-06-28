@@ -83,10 +83,10 @@
             @if(count($images) > 1)
                 <!-- Infinite Swiper.js Layout -->
                 <div class="relative group">
-                    <div class="swiper mySwiper w-full h-[50vh] md:h-[65vh] rounded-3xl shadow-xl">
+                    <div class="swiper mySwiper w-full aspect-video rounded-3xl shadow-xl">
                         <div class="swiper-wrapper">
                             @foreach($images as $img)
-                                <div class="swiper-slide h-[50vh] md:h-[65vh] relative bg-gray-100">
+                                <div class="swiper-slide w-full aspect-video relative bg-gray-100">
                                     <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}" class="absolute inset-0 w-full h-full object-cover">
                                 </div>
                             @endforeach
@@ -116,7 +116,7 @@
                     });
                 </script>
             @else
-                <img src="{{ Storage::url($images[0]) }}" alt="{{ $post->title }}" class="w-full h-[50vh] md:h-[65vh] object-cover rounded-3xl shadow-xl">
+                <img src="{{ Storage::url($images[0]) }}" alt="{{ $post->title }}" class="w-full aspect-video object-cover rounded-3xl shadow-xl">
             @endif
         </div>
     @endif

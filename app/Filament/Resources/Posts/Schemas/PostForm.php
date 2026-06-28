@@ -13,6 +13,10 @@ use Illuminate\Support\Str;
 
 use Filament\Forms\Components\DateTimePicker;
 
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
 class PostForm
 {
     public static function configure(Schema $schema): Schema
@@ -51,6 +55,33 @@ class PostForm
                     ->maxSize(2048)
                     ->disk('public')
                     ->directory('news-images')
+                    ->saveUploadedFileUsing(function (TemporaryUploadedFile $file): string {
+                        $manager = new ImageManager(new Driver());
+                        $image = $manager->decodePath($file->getRealPath());
+                        
+                        // Add watermark if exists
+                        $watermarkPath = public_path('images/watermark.png');
+                        if (file_exists($watermarkPath)) {
+                            // Insert watermark at bottom-right with 15px offset
+                            $image->insert($watermarkPath, 15, 15, 'bottom-right');
+                        }
+                        
+                        // Generate filename with .webp extension
+                        $filename = Str::uuid() . '.webp';
+                        $path = 'news-images/' . $filename;
+                        
+                        // Ensure directory exists
+                        $storagePath = storage_path('app/public/news-images');
+                        if (!file_exists($storagePath)) {
+                            mkdir($storagePath, 0755, true);
+                        }
+                        
+                        // Save as webp with 80% quality
+                        $image->encode(new \Intervention\Image\Encoders\WebpEncoder(80))
+                              ->save(storage_path('app/public/' . $path));
+                        
+                        return $path;
+                    })
                     ->columnSpanFull(),
                 RichEditor::make('content')
                     ->fileAttachmentsDisk('public')
