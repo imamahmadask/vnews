@@ -16,3 +16,9 @@ Route::get('/search', [PostController::class, 'search'])->name('search');
 Route::get('/post/{slug}', [PostController::class, 'show'])->name('posts.show');
 
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
+// Helper route for Shared Hosting to link storage
+Route::get('/setup-storage-link', function () {
+    \Illuminate\Support\Facades\Artisan::call('storage:link');
+    return 'Storage link has been created successfully! You can now safely remove this route.';
+});

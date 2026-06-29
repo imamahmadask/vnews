@@ -31,8 +31,8 @@
 
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "NewsArticle",
+  "@@context": "https://schema.org",
+  "@@type": "NewsArticle",
   "headline": "{{ $post->title }}",
   "image": [
     "{{ $ogImage ?? asset('images/logo vnews.png') }}"
@@ -40,15 +40,15 @@
   "datePublished": "{{ $post->published_at ? $post->published_at->toIso8601String() : $post->created_at->toIso8601String() }}",
   "dateModified": "{{ $post->updated_at->toIso8601String() }}",
   "author": [{
-      "@type": "Person",
+      "@@type": "Person",
       "name": "{{ $post->user->name }}",
       "url": "{{ url('/') }}"
     }],
   "publisher": {
-    "@type": "Organization",
+    "@@type": "Organization",
     "name": "vnews.id",
     "logo": {
-      "@type": "ImageObject",
+      "@@type": "ImageObject",
       "url": "{{ asset('images/logo vnews.png') }}"
     }
   }
@@ -112,8 +112,8 @@
                     <div class="swiper mySwiper w-full aspect-video shadow-xl">
                         <div class="swiper-wrapper">
                             @foreach($images as $img)
-                                <div class="swiper-slide w-full aspect-video relative bg-gray-100">
-                                    <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}" class="absolute inset-0 w-full h-full object-cover">
+                                <div class="swiper-slide w-full aspect-video relative bg-gray-100 flex items-center justify-center">
+                                    <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}" class="absolute inset-0 w-full h-full object-contain">
                                 </div>
                             @endforeach
                         </div>
@@ -142,7 +142,7 @@
                     });
                 </script>
             @else
-                <img src="{{ Storage::url($images[0]) }}" alt="{{ $post->title }}" class="w-full aspect-video object-cover shadow-xl">
+                <img src="{{ Storage::url($images[0]) }}" alt="{{ $post->title }}" class="w-full aspect-video object-contain bg-gray-100 shadow-xl">
             @endif
         </div>
     @endif
