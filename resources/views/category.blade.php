@@ -48,16 +48,16 @@
                     </div>
                     {{-- Content --}}
                     @if($post->category)
-                        <span class="text-xs font-bold tracking-wider text-rose-600 uppercase mb-2 block">
+                        <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-2 block">
                             {{ $post->category->name }}
                         </span>
                     @endif
-                    <h2 class="text-xl font-bold text-gray-900 group-hover:text-rose-600 transition-colors leading-tight mb-2"
+                    <h2 class="text-xl font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-tight mb-2"
                         style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                         {{ $post->title }}
                     </h2>
                     <div class="flex items-center gap-2">
-                        <span class="w-6 h-6 rounded-full bg-rose-500 flex items-center justify-center text-xs text-white font-bold flex-shrink-0">
+                        <span class="w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center text-xs text-white font-bold flex-shrink-0">
                             {{ strtoupper(substr($post->user->name, 0, 1)) }}
                         </span>
                         <p class="text-sm text-gray-500">

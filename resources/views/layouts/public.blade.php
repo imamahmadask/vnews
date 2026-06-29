@@ -29,7 +29,7 @@
                 </div>
                 <div class="flex items-center space-x-6">
                     <form action="{{ url('/search') }}" method="GET" class="hidden sm:block relative">
-                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari berita..." class="w-48 bg-gray-100 border-none rounded-full px-4 py-2 text-sm focus:ring-rose-500 focus:bg-white transition-all">
+                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari berita..." class="w-48 bg-gray-100 border-none rounded-full px-4 py-2 text-sm focus:ring-orange-500 focus:bg-white transition-all">
                         <button type="submit" class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </button>
@@ -49,7 +49,7 @@
     @yield('content')
 
     @yield('extra_js')
-    <footer class="bg-[#0a0a0a] mt-auto">
+    <footer class="bg-[#0B192C] mt-auto">
         <!-- Section Label (matches hero label style) -->
         <div class="border-b border-white/5 px-4 sm:px-6 lg:px-8">
             <div class="max-w-7xl mx-auto py-4">
@@ -77,7 +77,7 @@
                     <!-- Social icons -->
                     <div class="flex items-center gap-3 mt-1">
                         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
-                           class="w-9 h-9 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-rose-600 hover:border-rose-600 transition-all duration-300"
+                           class="w-9 h-9 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-orange-600 hover:border-orange-600 transition-all duration-300"
                            aria-label="Instagram">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
@@ -86,14 +86,14 @@
                             </svg>
                         </a>
                         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
-                           class="w-9 h-9 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-rose-600 hover:border-rose-600 transition-all duration-300"
+                           class="w-9 h-9 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-orange-600 hover:border-orange-600 transition-all duration-300"
                            aria-label="Facebook">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
                             </svg>
                         </a>
                         <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
-                           class="w-9 h-9 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-rose-600 hover:border-rose-600 transition-all duration-300"
+                           class="w-9 h-9 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-orange-600 hover:border-orange-600 transition-all duration-300"
                            aria-label="Twitter / X">
                             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -109,21 +109,21 @@
                         <li>
                             <a href="{{ route('home') }}"
                                class="text-sm text-white/55 hover:text-white hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2 group">
-                                <span class="w-3 h-px bg-rose-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                                <span class="w-3 h-px bg-orange-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
                                 Beranda
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('about') }}"
                                class="text-sm text-white/55 hover:text-white hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2 group">
-                                <span class="w-3 h-px bg-rose-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                                <span class="w-3 h-px bg-orange-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
                                 Tentang Kami
                             </a>
                         </li>
                         <li>
                             <a href="{{ url('/admin') }}"
                                class="text-sm text-white/55 hover:text-white hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2 group">
-                                <span class="w-3 h-px bg-rose-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                                <span class="w-3 h-px bg-orange-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
                                 Panel Admin
                             </a>
                         </li>
@@ -138,7 +138,7 @@
                         <li>
                             <a href="{{ route('category.show', $footerCat->slug) }}"
                                class="text-sm text-white/55 hover:text-white hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2 group">
-                                <span class="w-3 h-px bg-rose-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                                <span class="w-3 h-px bg-orange-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
                                 {{ $footerCat->name }}
                             </a>
                         </li>

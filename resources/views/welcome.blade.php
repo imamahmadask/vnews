@@ -128,11 +128,11 @@
                             @endif
                         </div>
                         @if($post->category)
-                            <span class="text-xs font-bold tracking-wider text-rose-600 uppercase mb-2 block">
+                            <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-2 block">
                                 {{ $post->category->name }}
                             </span>
                         @endif
-                        <h4 class="text-xl font-bold text-gray-900 group-hover:text-rose-600 transition-colors leading-tight mb-2">{{ $post->title }}</h4>
+                        <h4 class="text-xl font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-tight mb-2">{{ $post->title }}</h4>
                         <p class="text-sm text-gray-500">{{ $post->user->name }} &middot; {{ $post->created_at->format('M d, Y') }}</p>
                     </a>
                 @endforeach
@@ -165,11 +165,11 @@
                         </div>
                         {{-- Content --}}
                         @if($post->category)
-                            <span class="text-xs font-bold tracking-wider text-rose-600 uppercase mb-1.5 block">
+                            <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-1.5 block">
                                 {{ $post->category->name }}
                             </span>
                         @endif
-                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-rose-600 transition-colors leading-snug mb-2"
+                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-2"
                             style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                             {{ $post->title }}
                         </h4>
@@ -188,13 +188,13 @@
             {{-- Section Header --}}
             <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-2">
                 <div class="flex items-center gap-3">
-                    <span class="w-1 h-6 bg-rose-600 rounded-full block"></span>
+                    <span class="w-1 h-6 bg-orange-600 rounded-full block"></span>
                     <h3 class="text-2xl font-bold text-gray-900">Politik</h3>
                     <span class="text-xs font-bold tracking-widest uppercase text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">Top Views</span>
                 </div>
                 @if($politicsCategory)
                     <a href="{{ route('category.show', $politicsCategory->slug) }}"
-                       class="text-sm font-semibold text-rose-600 hover:text-rose-700 transition-colors flex items-center gap-1">
+                       class="text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors flex items-center gap-1">
                         Lihat Semua
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -231,8 +231,8 @@
                             </div>
                         </div>
                         {{-- Content --}}
-                        <span class="text-xs font-bold tracking-wider text-rose-600 uppercase mb-1.5 block">Politik</span>
-                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-rose-600 transition-colors leading-snug mb-2"
+                        <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-1.5 block">Politik</span>
+                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-2"
                             style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                             {{ $post->title }}
                         </h4>
@@ -251,13 +251,13 @@
             {{-- Section Header --}}
             <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-2">
                 <div class="flex items-center gap-3">
-                    <span class="w-1 h-6 bg-rose-600 rounded-full block"></span>
+                    <span class="w-1 h-6 bg-orange-600 rounded-full block"></span>
                     <h3 class="text-2xl font-bold text-gray-900">Olahraga</h3>
                     <span class="text-xs font-bold tracking-widest uppercase text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">Top Views</span>
                 </div>
                 @if($sportsCategory)
                     <a href="{{ route('category.show', $sportsCategory->slug) }}"
-                       class="text-sm font-semibold text-rose-600 hover:text-rose-700 transition-colors flex items-center gap-1">
+                       class="text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors flex items-center gap-1">
                         Lihat Semua
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -294,8 +294,8 @@
                             </div>
                         </div>
                         {{-- Content --}}
-                        <span class="text-xs font-bold tracking-wider text-rose-600 uppercase mb-1.5 block">Olahraga</span>
-                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-rose-600 transition-colors leading-snug mb-2"
+                        <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-1.5 block">Olahraga</span>
+                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-2"
                             style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                             {{ $post->title }}
                         </h4>
@@ -314,13 +314,13 @@
             {{-- Section Header --}}
             <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-2">
                 <div class="flex items-center gap-3">
-                    <span class="w-1 h-6 bg-rose-600 rounded-full block"></span>
+                    <span class="w-1 h-6 bg-orange-600 rounded-full block"></span>
                     <h3 class="text-2xl font-bold text-gray-900">Hiburan</h3>
                     <span class="text-xs font-bold tracking-widest uppercase text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">Top Views</span>
                 </div>
                 @if($entertainmentCategory)
                     <a href="{{ route('category.show', $entertainmentCategory->slug) }}"
-                       class="text-sm font-semibold text-rose-600 hover:text-rose-700 transition-colors flex items-center gap-1">
+                       class="text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors flex items-center gap-1">
                         Lihat Semua
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -357,8 +357,8 @@
                             </div>
                         </div>
                         {{-- Content --}}
-                        <span class="text-xs font-bold tracking-wider text-rose-600 uppercase mb-1.5 block">Hiburan</span>
-                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-rose-600 transition-colors leading-snug mb-2"
+                        <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-1.5 block">Hiburan</span>
+                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-2"
                             style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                             {{ $post->title }}
                         </h4>

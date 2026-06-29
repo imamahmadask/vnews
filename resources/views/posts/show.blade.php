@@ -51,7 +51,7 @@
     <div class="max-w-4xl mx-auto px-4 pt-12 pb-10">
         @if($post->category)
             <div class="flex flex-wrap items-center gap-3 mb-6">
-                <a href="{{ route('category.show', $post->category->slug) }}" class="text-sm font-bold tracking-widest text-rose-600 uppercase bg-rose-50 hover:bg-rose-100 transition-colors px-3 py-1 rounded-full">
+                <a href="{{ route('category.show', $post->category->slug) }}" class="text-sm font-bold tracking-widest text-orange-600 uppercase bg-orange-50 hover:bg-orange-100 transition-colors px-3 py-1 rounded-full">
                     {{ $post->category->name }}
                 </a>
                 @if($post->tags && $post->tags->count() > 0)
@@ -67,7 +67,7 @@
         <h1 class="text-4xl md:text-6xl font-extrabold leading-tight text-gray-900 mb-8">{{ $post->title }}</h1>
         
         <div class="flex items-center gap-4 text-gray-500">
-            <div class="w-12 h-12 rounded-full bg-rose-500 flex items-center justify-center text-lg text-white font-bold shadow-sm">
+            <div class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-lg text-white font-bold shadow-sm">
                 {{ substr($post->user->name, 0, 1) }}
             </div>
             <div>
@@ -123,7 +123,7 @@
 
     <!-- Content -->
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <article class="prose prose-lg md:prose-xl max-w-none text-gray-700 prose-headings:text-gray-900 prose-a:text-rose-600 hover:prose-a:text-rose-500">
+        <article class="prose prose-lg md:prose-xl max-w-none text-gray-700 prose-headings:text-gray-900 prose-a:text-orange-600 hover:prose-a:text-orange-500">
             {!! $post->content !!}
         </article>
         
@@ -140,7 +140,7 @@
                         @endif
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                         <div class="absolute bottom-0 left-0 right-0 p-4">
-                            <h4 class="text-white font-bold leading-tight group-hover:text-rose-400 transition-colors">{{ Str::limit($related->title, 50) }}</h4>
+                            <h4 class="text-white font-bold leading-tight group-hover:text-orange-400 transition-colors">{{ Str::limit($related->title, 50) }}</h4>
                         </div>
                     </a>
                 @endforeach
@@ -153,15 +153,15 @@
             <div class="flex items-center gap-4">
                 <span class="text-sm font-bold text-gray-500 uppercase tracking-wider">Bagikan:</span>
                 <!-- Facebook -->
-                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->fullUrl()) }}" target="_blank" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-rose-50 hover:text-rose-600 transition-colors" aria-label="Bagikan ke Facebook">
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->fullUrl()) }}" target="_blank" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-colors" aria-label="Bagikan ke Facebook">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
                 </a>
                 <!-- Twitter/X -->
-                <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->fullUrl()) }}&text={{ urlencode($post->title) }}" target="_blank" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-rose-50 hover:text-rose-600 transition-colors" aria-label="Bagikan ke X">
+                <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->fullUrl()) }}&text={{ urlencode($post->title) }}" target="_blank" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-colors" aria-label="Bagikan ke X">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
                 </a>
                 <!-- WhatsApp -->
-                <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title . ' ' . request()->fullUrl()) }}" target="_blank" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-rose-50 hover:text-rose-600 transition-colors" aria-label="Bagikan ke WhatsApp">
+                <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title . ' ' . request()->fullUrl()) }}" target="_blank" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-colors" aria-label="Bagikan ke WhatsApp">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0c-6.627 0-12 5.373-12 12 0 2.19.596 4.252 1.636 6.021l-1.667 6.084 6.223-1.632c1.725.952 3.708 1.496 5.808 1.496 6.627 0 12-5.373 12-12s-5.373-12-12-12zm0 21.896c-1.874 0-3.625-.487-5.15-1.353l-.37-.21-3.816 1.001 1.018-3.717-.23-.365c-.958-1.534-1.472-3.32-1.472-5.19 0-5.467 4.449-9.916 9.916-9.916s9.916 4.449 9.916 9.916-4.449 9.916-9.916 9.916zm5.45-7.443c-.299-.15-1.767-.872-2.04-.972-.272-.1-.471-.15-.67.15-.199.3-.771.972-.945 1.171-.174.2-.348.225-.647.075-.299-.15-1.26-.465-2.4-1.485-.886-.795-1.484-1.777-1.658-2.077-.174-.3-.018-.462.132-.612.135-.135.299-.35.449-.525.15-.175.2-.299.299-.499.1-.2.05-.375-.025-.525-.075-.15-.67-1.615-.918-2.21-.242-.579-.487-.5-.67-.51-.174-.01-.373-.01-.572-.01-.199 0-.522.075-.796.375-.274.3-1.045 1.02-1.045 2.485 0 1.465 1.07 2.88 1.219 3.08.15.2 2.095 3.195 5.076 4.482.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.086 1.767-.722 2.016-1.422.249-.7.249-1.295.174-1.422-.074-.127-.274-.2-.573-.35z"/></svg>
                 </a>
             </div>
