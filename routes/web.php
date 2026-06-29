@@ -14,3 +14,5 @@ Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('categ
 Route::get('/search', [PostController::class, 'search'])->name('search');
 
 Route::get('/post/{slug}', [PostController::class, 'show'])->name('posts.show');
+
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');

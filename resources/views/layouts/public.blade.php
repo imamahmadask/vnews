@@ -5,7 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'vnews.id - Berita Visual Indonesia')</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-    @yield('meta_tags')
+    <link rel="canonical" href="{{ request()->url() }}">
+    @hasSection('meta_tags')
+        @yield('meta_tags')
+    @else
+        <meta name="description" content="Portal berita visual terdepan. Kami percaya satu foto mampu menceritakan kisah yang lebih dalam daripada ribuan kata.">
+        <meta property="og:title" content="vnews.id - Berita Visual Indonesia">
+        <meta property="og:description" content="Portal berita visual terdepan.">
+        <meta property="og:image" content="{{ asset('images/logo vnews.png') }}">
+        <meta property="og:url" content="{{ request()->url() }}">
+        <meta property="og:type" content="website">
+    @endif
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">

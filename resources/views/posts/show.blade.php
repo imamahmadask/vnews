@@ -28,6 +28,32 @@
 @endif
 <meta name="twitter:title" content="{{ $post->title }}">
 <meta name="keywords" content="{{ $post->tags->pluck('name')->implode(', ') }}">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "headline": "{{ $post->title }}",
+  "image": [
+    "{{ $ogImage ?? asset('images/logo vnews.png') }}"
+  ],
+  "datePublished": "{{ $post->published_at ? $post->published_at->toIso8601String() : $post->created_at->toIso8601String() }}",
+  "dateModified": "{{ $post->updated_at->toIso8601String() }}",
+  "author": [{
+      "@type": "Person",
+      "name": "{{ $post->user->name }}",
+      "url": "{{ url('/') }}"
+    }],
+  "publisher": {
+    "@type": "Organization",
+    "name": "vnews.id",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ asset('images/logo vnews.png') }}"
+    }
+  }
+}
+</script>
 @endsection
 
 @section('extra_css')
