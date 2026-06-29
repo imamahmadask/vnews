@@ -117,11 +117,11 @@
     @if($topPosts && $topPosts->count() > 0)
         {{-- Top Posts --}}
         <div class="mb-16">
-            <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">Top Stories</h3>
+            <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">Berita Utama</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($topPosts as $post)
                     <a href="{{ route('posts.show', $post->slug) }}" class="group block">
-                        <div class="relative w-full h-56 rounded-2xl overflow-hidden mb-4 bg-gray-100">
+                        <div class="relative w-full h-56 overflow-hidden mb-4 bg-gray-100">
                             @if($post->image)
                                 @php $topImage = is_array($post->image) ? $post->image[0] : $post->image; @endphp
                                 <img src="{{ Storage::url($topImage) }}" alt="{{ $post->title }}" class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
@@ -141,37 +141,240 @@
     @endif
 
     @if($otherPosts && $otherPosts->count() > 0)
-        {{-- Other Posts Masonry --}}
-        <div>
-            <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">More News</h3>
-            <div class="columns-1 sm:columns-2 lg:columns-4 gap-6 space-y-6">
+        {{-- Other Posts Grid --}}
+        <div class="mb-16">
+            <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">Berita Lainnya</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($otherPosts as $post)
-                    <div class="break-inside-avoid group relative rounded-2xl overflow-hidden bg-gray-50 hover:bg-gray-100 transition-colors duration-300">
-                        <a href="{{ route('posts.show', $post->slug) }}" class="block">
+                    <a href="{{ route('posts.show', $post->slug) }}" class="group block">
+                        {{-- Image --}}
+                        <div class="relative w-full h-44 overflow-hidden mb-3 bg-gray-100">
                             @if($post->image)
                                 @php $otherImage = is_array($post->image) ? $post->image[0] : $post->image; @endphp
-                                <img src="{{ Storage::url($otherImage) }}" alt="{{ $post->title }}" class="w-full h-auto object-cover rounded-t-2xl">
+                                <img src="{{ Storage::url($otherImage) }}"
+                                     alt="{{ $post->title }}"
+                                     class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
+                            @else
+                                <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
                             @endif
-                            <div class="p-5">
-                                @if($post->category)
-                                    <span class="text-xs font-bold tracking-wider text-rose-600 uppercase mb-2 block">
-                                        {{ $post->category->name }}
-                                    </span>
-                                @endif
-                                <h4 class="text-lg font-bold text-gray-900 group-hover:text-rose-600 transition-colors leading-tight mb-2">{{ $post->title }}</h4>
-                                <p class="text-xs text-gray-500">{{ $post->created_at->diffForHumans() }}</p>
-                            </div>
-                        </a>
-                    </div>
+                        </div>
+                        {{-- Content --}}
+                        @if($post->category)
+                            <span class="text-xs font-bold tracking-wider text-rose-600 uppercase mb-1.5 block">
+                                {{ $post->category->name }}
+                            </span>
+                        @endif
+                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-rose-600 transition-colors leading-snug mb-2"
+                            style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                            {{ $post->title }}
+                        </h4>
+                        <p class="text-xs text-gray-400">
+                            {{ $post->user->name }} &middot; {{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}
+                        </p>
+                    </a>
                 @endforeach
             </div>
         </div>
     @endif
-    
+
+    {{-- ===== POLITICS SECTION ===== --}}
+    @if($politicsPosts && $politicsPosts->count() > 0)
+        <div class="mb-16">
+            {{-- Section Header --}}
+            <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-2">
+                <div class="flex items-center gap-3">
+                    <span class="w-1 h-6 bg-rose-600 rounded-full block"></span>
+                    <h3 class="text-2xl font-bold text-gray-900">Politik</h3>
+                    <span class="text-xs font-bold tracking-widest uppercase text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">Top Views</span>
+                </div>
+                @if($politicsCategory)
+                    <a href="{{ route('category.show', $politicsCategory->slug) }}"
+                       class="text-sm font-semibold text-rose-600 hover:text-rose-700 transition-colors flex items-center gap-1">
+                        Lihat Semua
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                @endif
+            </div>
+
+            {{-- Cards --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                @foreach($politicsPosts as $post)
+                    <a href="{{ route('posts.show', $post->slug) }}" class="group block">
+                        {{-- Image --}}
+                        <div class="relative w-full h-44 overflow-hidden mb-3 bg-gray-100">
+                            @if($post->image)
+                                @php $img = is_array($post->image) ? $post->image[0] : $post->image; @endphp
+                                <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"
+                                     class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
+                            @else
+                                <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                            @endif
+                            {{-- Views badge --}}
+                            <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                {{ number_format($post->views_count) }}
+                            </div>
+                        </div>
+                        {{-- Content --}}
+                        <span class="text-xs font-bold tracking-wider text-rose-600 uppercase mb-1.5 block">Politik</span>
+                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-rose-600 transition-colors leading-snug mb-2"
+                            style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                            {{ $post->title }}
+                        </h4>
+                        <p class="text-xs text-gray-400">
+                            {{ $post->user->name }} &middot; {{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}
+                        </p>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
+    {{-- ===== SPORTS SECTION ===== --}}
+    @if($sportsPosts && $sportsPosts->count() > 0)
+        <div class="mb-16">
+            {{-- Section Header --}}
+            <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-2">
+                <div class="flex items-center gap-3">
+                    <span class="w-1 h-6 bg-rose-600 rounded-full block"></span>
+                    <h3 class="text-2xl font-bold text-gray-900">Olahraga</h3>
+                    <span class="text-xs font-bold tracking-widest uppercase text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">Top Views</span>
+                </div>
+                @if($sportsCategory)
+                    <a href="{{ route('category.show', $sportsCategory->slug) }}"
+                       class="text-sm font-semibold text-rose-600 hover:text-rose-700 transition-colors flex items-center gap-1">
+                        Lihat Semua
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                @endif
+            </div>
+
+            {{-- Cards --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                @foreach($sportsPosts as $post)
+                    <a href="{{ route('posts.show', $post->slug) }}" class="group block">
+                        {{-- Image --}}
+                        <div class="relative w-full h-44 overflow-hidden mb-3 bg-gray-100">
+                            @if($post->image)
+                                @php $img = is_array($post->image) ? $post->image[0] : $post->image; @endphp
+                                <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"
+                                     class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
+                            @else
+                                <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                            @endif
+                            {{-- Views badge --}}
+                            <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                {{ number_format($post->views_count) }}
+                            </div>
+                        </div>
+                        {{-- Content --}}
+                        <span class="text-xs font-bold tracking-wider text-rose-600 uppercase mb-1.5 block">Olahraga</span>
+                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-rose-600 transition-colors leading-snug mb-2"
+                            style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                            {{ $post->title }}
+                        </h4>
+                        <p class="text-xs text-gray-400">
+                            {{ $post->user->name }} &middot; {{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}
+                        </p>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
+    {{-- ===== ENTERTAINMENT SECTION ===== --}}
+    @if($entertainmentPosts && $entertainmentPosts->count() > 0)
+        <div class="mb-16">
+            {{-- Section Header --}}
+            <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-2">
+                <div class="flex items-center gap-3">
+                    <span class="w-1 h-6 bg-rose-600 rounded-full block"></span>
+                    <h3 class="text-2xl font-bold text-gray-900">Hiburan</h3>
+                    <span class="text-xs font-bold tracking-widest uppercase text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">Top Views</span>
+                </div>
+                @if($entertainmentCategory)
+                    <a href="{{ route('category.show', $entertainmentCategory->slug) }}"
+                       class="text-sm font-semibold text-rose-600 hover:text-rose-700 transition-colors flex items-center gap-1">
+                        Lihat Semua
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                @endif
+            </div>
+
+            {{-- Cards --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                @foreach($entertainmentPosts as $post)
+                    <a href="{{ route('posts.show', $post->slug) }}" class="group block">
+                        {{-- Image --}}
+                        <div class="relative w-full h-44 overflow-hidden mb-3 bg-gray-100">
+                            @if($post->image)
+                                @php $img = is_array($post->image) ? $post->image[0] : $post->image; @endphp
+                                <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"
+                                     class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
+                            @else
+                                <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                            @endif
+                            {{-- Views badge --}}
+                            <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                {{ number_format($post->views_count) }}
+                            </div>
+                        </div>
+                        {{-- Content --}}
+                        <span class="text-xs font-bold tracking-wider text-rose-600 uppercase mb-1.5 block">Hiburan</span>
+                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-rose-600 transition-colors leading-snug mb-2"
+                            style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                            {{ $post->title }}
+                        </h4>
+                        <p class="text-xs text-gray-400">
+                            {{ $post->user->name }} &middot; {{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}
+                        </p>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
     @if((!$heroPosts || $heroPosts->count() == 0) && (!$topPosts || $topPosts->count() == 0))
         <div class="flex flex-col items-center justify-center py-20 text-center">
-            <h3 class="text-xl font-semibold text-gray-900">No visual stories yet</h3>
-            <p class="text-gray-500 mt-2">Check back later for breathtaking photo journalism.</p>
+            <h3 class="text-xl font-semibold text-gray-900">Belum ada berita visual</h3>
+            <p class="text-gray-500 mt-2">Kunjungi lagi nanti untuk jurnalisme foto yang menakjubkan.</p>
         </div>
     @endif
 

@@ -1,11 +1,11 @@
 @extends('layouts.public')
 
-@section('title', 'About - vnews.id')
+@section('title', 'Tentang Kami - vnews.id')
 
 @section('content')
 <main class="flex-grow w-full pb-20">
     <div class="max-w-3xl mx-auto px-4 pt-20 pb-10">
-        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight text-gray-900 mb-8">About <span class="text-rose-600">vnews.id</span></h1>
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight text-gray-900 mb-8">Tentang <span class="text-rose-600">vnews.id</span></h1>
         
         <div class="prose prose-lg md:prose-xl max-w-none text-gray-700">
             <p class="lead text-2xl font-medium text-gray-900 mb-8">

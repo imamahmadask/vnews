@@ -11,7 +11,7 @@
     
     <!-- Category Navigation -->
     <div class="mb-10 flex space-x-2 overflow-x-auto pb-4 scrollbar-hide">
-        <a href="{{ route('home') }}" class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">All</a>
+        <a href="{{ route('home') }}" class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">Semua</a>
         @foreach($categories as $cat)
             @if($cat->id === $category->id)
                 <a href="{{ route('category.show', $cat->slug) }}" class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold transition-colors bg-black text-white">{{ $cat->name }}</a>
@@ -23,37 +23,61 @@
 
     <div class="mb-12">
         <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">{{ $category->name }}</h1>
-        <p class="text-lg text-gray-500 max-w-2xl">{{ $category->description ?? 'Explore all stories in this category.' }}</p>
+        <p class="text-lg text-gray-500 max-w-2xl">{{ $category->description ?? 'Jelajahi semua berita dalam kategori ini.' }}</p>
     </div>
 
     @if($posts->count() > 0)
-        <div class="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($posts as $post)
-                <div class="break-inside-avoid group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 bg-gray-50 hover:bg-gray-100">
-                    <a href="{{ route('posts.show', $post->slug) }}" class="block">
+                <a href="{{ route('posts.show', $post->slug) }}" class="group block">
+                    {{-- Image --}}
+                    <div class="relative w-full h-56 overflow-hidden mb-4 bg-gray-100">
                         @if($post->image)
                             @php $catImage = is_array($post->image) ? $post->image[0] : $post->image; @endphp
-                            <img src="{{ Storage::url($catImage) }}" alt="{{ $post->title }}" class="w-full h-auto object-cover rounded-t-2xl">
+                            <img src="{{ Storage::url($catImage) }}"
+                                 alt="{{ $post->title }}"
+                                 class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
                         @else
-                            <div class="w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-2xl">
-                                <span class="text-gray-400">No Image</span>
+                            <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
                             </div>
                         @endif
-                        <div class="p-5">
-                            <h2 class="text-xl font-bold text-gray-900 leading-tight mb-2 group-hover:text-rose-600 transition-colors">{{ $post->title }}</h2>
-                            <p class="text-sm text-gray-500 flex items-center gap-2 mt-4">
-                                <span class="w-6 h-6 rounded-full bg-rose-500 flex items-center justify-center text-xs text-white font-bold">{{ substr($post->user->name, 0, 1) }}</span>
-                                {{ $post->user->name }} &middot; {{ $post->created_at->diffForHumans() }}
-                            </p>
-                        </div>
-                    </a>
-                </div>
+                    </div>
+                    {{-- Content --}}
+                    @if($post->category)
+                        <span class="text-xs font-bold tracking-wider text-rose-600 uppercase mb-2 block">
+                            {{ $post->category->name }}
+                        </span>
+                    @endif
+                    <h2 class="text-xl font-bold text-gray-900 group-hover:text-rose-600 transition-colors leading-tight mb-2"
+                        style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                        {{ $post->title }}
+                    </h2>
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-rose-500 flex items-center justify-center text-xs text-white font-bold flex-shrink-0">
+                            {{ strtoupper(substr($post->user->name, 0, 1)) }}
+                        </span>
+                        <p class="text-sm text-gray-500">
+                            {{ $post->user->name }} &middot; {{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}
+                        </p>
+                    </div>
+                </a>
             @endforeach
         </div>
+
+        {{-- Pagination --}}
+        @if($posts->hasPages())
+            <div class="mt-12">
+                {{ $posts->links() }}
+            </div>
+        @endif
     @else
         <div class="flex flex-col items-center justify-center py-20 text-center">
-            <h3 class="text-xl font-semibold text-gray-900">No stories in this category</h3>
-            <p class="text-gray-500 mt-2">Check back later or explore other categories.</p>
+            <h3 class="text-xl font-semibold text-gray-900">Belum ada berita di kategori ini</h3>
+            <p class="text-gray-500 mt-2">Kunjungi lagi nanti atau jelajahi kategori lainnya.</p>
         </div>
     @endif
 
