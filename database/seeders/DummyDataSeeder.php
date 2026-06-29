@@ -19,9 +19,14 @@ class DummyDataSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'password' => bcrypt('password'),
-                'role' => 'admin'
+                'role' => 'admin',
+                'is_admin' => true
             ]
         );
+        $admin->update([
+            'role' => 'admin',
+            'is_admin' => true
+        ]);
 
         $categories = [
             ['name' => 'Sports', 'description' => 'Latest news from the sports world.'],
@@ -51,14 +56,21 @@ class DummyDataSeeder extends Seeder
             
             for ($j = 0; $j < $numImages; $j++) {
                 $imageName = 'news-images/dummy-' . uniqid() . '.jpg';
+                $success = false;
                 try {
                     $response = Http::withOptions(['verify' => false])->timeout(10)->get('https://picsum.photos/seed/' . uniqid() . '/800/600');
                     if ($response->successful()) {
                         Storage::disk('public')->put($imageName, $response->body());
                         $images[] = $imageName;
+                        $success = true;
                     }
                 } catch (\Exception $e) {
                     // ignore
+                }
+
+                if (!$success) {
+                    $this->generateFallbackImage($imageName);
+                    $images[] = $imageName;
                 }
             }
 
@@ -67,12 +79,33 @@ class DummyDataSeeder extends Seeder
                 'category_id' => fake()->randomElement($catIds),
                 'title' => $title,
                 'slug' => Str::slug($title) . '-' . uniqid(),
-                'image' => count($images) > 0 ? $images : null,
+                'image' => $images,
                 'content' => '<p>' . implode('</p><p>', fake()->paragraphs(4)) . '</p>',
                 'status' => 'published',
+                'published_at' => now(),
             ]);
         }
 
         $this->command->info('Dummy data generated successfully.');
+    }
+
+    private function generateFallbackImage(string $path): void
+    {
+        if (extension_loaded('gd')) {
+            $im = imagecreatetruecolor(800, 600);
+            $bg = imagecolorallocate($im, 220, 220, 220);
+            imagefill($im, 0, 0, $bg);
+            $textColor = imagecolorallocate($im, 100, 100, 100);
+            imagestring($im, 5, 350, 280, "vNews Placeholder", $textColor);
+            ob_start();
+            imagejpeg($im);
+            $data = ob_get_clean();
+            imagedestroy($im);
+            Storage::disk('public')->put($path, $data);
+            return;
+        }
+
+        $base64 = '/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=';
+        Storage::disk('public')->put($path, base64_decode($base64));
     }
 }
