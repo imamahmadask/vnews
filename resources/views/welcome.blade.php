@@ -49,6 +49,15 @@
                                     </div>
                                 @endif
 
+                                {{-- Views badge --}}
+                                <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 z-10">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    {{ number_format($post->views_count) }}
+                                </div>
+
                                 {{-- Gradient Overlay --}}
                                 <div class="hero-card__overlay"></div>
 
@@ -126,6 +135,14 @@
                                 @php $topImage = is_array($post->image) ? $post->image[0] : $post->image; @endphp
                                 <img src="{{ Storage::url($topImage) }}" alt="{{ $post->title }}" class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
                             @endif
+                            {{-- Views badge --}}
+                            <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                {{ number_format($post->views_count) }}
+                            </div>
                         </div>
                         @if($post->category)
                             <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-2 block">
@@ -162,6 +179,14 @@
                                     </svg>
                                 </div>
                             @endif
+                            {{-- Views badge --}}
+                            <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                {{ number_format($post->views_count) }}
+                            </div>
                         </div>
                         {{-- Content --}}
                         @if($post->category)
