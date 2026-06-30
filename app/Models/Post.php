@@ -11,6 +11,8 @@ class Post extends Model
         'slug',
         'content',
         'image',
+        'image_captions',
+        'images_with_captions',
         'user_id',
         'category_id',
         'status',
@@ -20,8 +22,52 @@ class Post extends Model
 
     protected $casts = [
         'image' => 'array',
+        'image_captions' => 'array',
         'published_at' => 'datetime',
     ];
+
+    protected $appends = [
+        'images_with_captions',
+    ];
+
+    public function getImagesWithCaptionsAttribute()
+    {
+        $images = $this->image ?? [];
+        $captions = $this->image_captions ?? [];
+        
+        $result = [];
+        foreach ($images as $path) {
+            $result[] = [
+                'path' => $path,
+                'caption' => $captions[$path] ?? '',
+            ];
+        }
+        return $result;
+    }
+
+    public function setImagesWithCaptionsAttribute($value)
+    {
+        $images = [];
+        $captions = [];
+        
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                $path = $item['path'] ?? null;
+                if ($path) {
+                    if (is_array($path)) {
+                        $path = reset($path);
+                    }
+                    if (is_string($path)) {
+                        $images[] = $path;
+                        $captions[$path] = $item['caption'] ?? '';
+                    }
+                }
+            }
+        }
+        
+        $this->image = $images;
+        $this->image_captions = $captions;
+    }
 
     public function category()
     {

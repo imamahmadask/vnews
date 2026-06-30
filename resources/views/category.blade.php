@@ -31,7 +31,7 @@
             @foreach($posts as $post)
                 <a href="{{ route('posts.show', $post->slug) }}" class="group block">
                     {{-- Image --}}
-                    <div class="relative w-full h-56 overflow-hidden mb-4 bg-gray-100">
+                    <div class="relative w-full aspect-[6/4] overflow-hidden mb-4 bg-gray-100">
                         @if($post->image)
                             @php $catImage = is_array($post->image) ? $post->image[0] : $post->image; @endphp
                             <img src="{{ Storage::url($catImage) }}"

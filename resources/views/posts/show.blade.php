@@ -144,17 +144,21 @@
 
         @if ($post->image)
             <div class="max-w-6xl mx-auto px-4 mb-12">
-                @php $images = is_array($post->image) ? $post->image : [$post->image]; @endphp
+                @php
+                    $images = is_array($post->image) ? $post->image : [$post->image];
+                    $captions = is_array($post->image_captions) ? $post->image_captions : [];
+                @endphp
                 @if (count($images) > 1)
                     <!-- Infinite Swiper.js Layout -->
                     <div class="relative group">
-                        <div class="swiper mySwiper w-full aspect-video shadow-xl">
+                        <div class="swiper mySwiper w-full aspect-[6/4] shadow-xl">
                             <div class="swiper-wrapper">
                                 @foreach ($images as $img)
-                                    <div
-                                        class="swiper-slide w-full aspect-video relative bg-gray-100 flex items-center justify-center">
+                                    @php $caption = $captions[$img] ?? ''; @endphp
+                                    <div class="swiper-slide w-full h-full bg-gray-100 flex items-center justify-center"
+                                        data-caption="{{ $caption }}">
                                         <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"
-                                            class="absolute inset-0 w-full h-full object-contain">
+                                            class="w-full h-full object-contain">
                                     </div>
                                 @endforeach
                             </div>
@@ -164,11 +168,8 @@
                         </div>
                     </div>
 
-                    <div class="text-center mt-4">
-                        <span
-                            class="text-xs font-semibold tracking-wider text-gray-500 uppercase bg-gray-100 px-4 py-2 rounded-full shadow-sm">&larr;
-                            Geser atau gunakan tombol panah &rarr;</span>
-                    </div>
+                    <!-- Left-aligned Caption Below Swiper -->
+                    <div id="swiper-caption" class="text-xs sm:text-sm text-gray-500 mt-3 text-center"></div>
 
                     <!-- Swiper Initialization -->
                     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -181,12 +182,39 @@
                                     nextEl: '.swiper-button-next',
                                     prevEl: '.swiper-button-prev',
                                 },
+                                on: {
+                                    init: function() {
+                                        updateCaption(this);
+                                    },
+                                    slideChange: function() {
+                                        updateCaption(this);
+                                    }
+                                }
                             });
+
+                            function updateCaption(swiperInstance) {
+                                const activeSlide = swiperInstance.slides[swiperInstance.activeIndex];
+                                if (activeSlide) {
+                                    const caption = activeSlide.getAttribute('data-caption') || '';
+                                    const captionEl = document.getElementById('swiper-caption');
+                                    if (captionEl) {
+                                        captionEl.textContent = caption;
+                                    }
+                                }
+                            }
                         });
                     </script>
                 @else
-                    <img src="{{ Storage::url($images[0]) }}" alt="{{ $post->title }}"
-                        class="w-full aspect-video object-contain bg-gray-100 shadow-xl">
+                    @php $caption = $captions[$images[0]] ?? ''; @endphp
+                    <div class="flex flex-col">
+                        <img src="{{ Storage::url($images[0]) }}" alt="{{ $post->title }}"
+                            class="w-full aspect-[6/4] object-cover shadow-xl bg-gray-100">
+                        @if ($caption)
+                            <div class="text-xs sm:text-sm text-gray-500 mt-3 text-left">
+                                {{ $caption }}
+                            </div>
+                        @endif
+                    </div>
                 @endif
             </div>
         @endif
@@ -205,7 +233,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         @foreach ($relatedPosts as $related)
                             <a href="{{ route('posts.show', $related->slug) }}"
-                                class="group block relative overflow-hidden bg-gray-100 h-48">
+                                class="group block relative overflow-hidden bg-gray-100 aspect-[6/4]">
                                 @if ($related->image)
                                     @php $relImage = is_array($related->image) ? $related->image[0] : $related->image; @endphp
                                     <img src="{{ Storage::url($relImage) }}" alt="{{ $related->title }}"

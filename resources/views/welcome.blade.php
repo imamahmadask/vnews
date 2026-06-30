@@ -121,7 +121,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($topPosts as $post)
                     <a href="{{ route('posts.show', $post->slug) }}" class="group block">
-                        <div class="relative w-full h-56 overflow-hidden mb-4 bg-gray-100">
+                        <div class="relative w-full aspect-[6/4] overflow-hidden mb-4 bg-gray-100">
                             @if($post->image)
                                 @php $topImage = is_array($post->image) ? $post->image[0] : $post->image; @endphp
                                 <img src="{{ Storage::url($topImage) }}" alt="{{ $post->title }}" class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
@@ -148,7 +148,7 @@
                 @foreach($otherPosts as $post)
                     <a href="{{ route('posts.show', $post->slug) }}" class="group block">
                         {{-- Image --}}
-                        <div class="relative w-full h-44 overflow-hidden mb-3 bg-gray-100">
+                        <div class="relative w-full aspect-[6/4] overflow-hidden mb-3 bg-gray-100">
                             @if($post->image)
                                 @php $otherImage = is_array($post->image) ? $post->image[0] : $post->image; @endphp
                                 <img src="{{ Storage::url($otherImage) }}"
@@ -208,7 +208,7 @@
                 @foreach($politicsPosts as $post)
                     <a href="{{ route('posts.show', $post->slug) }}" class="group block">
                         {{-- Image --}}
-                        <div class="relative w-full h-44 overflow-hidden mb-3 bg-gray-100">
+                        <div class="relative w-full aspect-[6/4] overflow-hidden mb-3 bg-gray-100">
                             @if($post->image)
                                 @php $img = is_array($post->image) ? $post->image[0] : $post->image; @endphp
                                 <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"
@@ -271,7 +271,7 @@
                 @foreach($sportsPosts as $post)
                     <a href="{{ route('posts.show', $post->slug) }}" class="group block">
                         {{-- Image --}}
-                        <div class="relative w-full h-44 overflow-hidden mb-3 bg-gray-100">
+                        <div class="relative w-full aspect-[6/4] overflow-hidden mb-3 bg-gray-100">
                             @if($post->image)
                                 @php $img = is_array($post->image) ? $post->image[0] : $post->image; @endphp
                                 <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"
@@ -334,7 +334,7 @@
                 @foreach($entertainmentPosts as $post)
                     <a href="{{ route('posts.show', $post->slug) }}" class="group block">
                         {{-- Image --}}
-                        <div class="relative w-full h-44 overflow-hidden mb-3 bg-gray-100">
+                        <div class="relative w-full aspect-[6/4] overflow-hidden mb-3 bg-gray-100">
                             @if($post->image)
                                 @php $img = is_array($post->image) ? $post->image[0] : $post->image; @endphp
                                 <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"

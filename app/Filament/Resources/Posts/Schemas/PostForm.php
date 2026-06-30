@@ -12,6 +12,7 @@ use Filament\Forms\Components\Hidden;
 use Illuminate\Support\Str;
 
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Repeater;
 
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Intervention\Image\ImageManager;
@@ -48,41 +49,56 @@ class PostForm
                 TextInput::make('slug')
                     ->required()
                     ->unique(ignoreRecord: true),
-                FileUpload::make('image')
-                    ->image()
-                    ->multiple()
-                    ->maxFiles(5)
-                    ->maxSize(2048)
-                    ->disk('public')
-                    ->directory('news-images')
-                    ->saveUploadedFileUsing(function (TemporaryUploadedFile $file): string {
-                        $manager = new ImageManager(new Driver());
-                        $image = $manager->decodePath($file->getRealPath());
-                        
-                        // Add watermark if exists
-                        $watermarkPath = public_path('images/watermark.png');
-                        if (file_exists($watermarkPath)) {
-                            // Insert watermark at bottom-right with 15px offset
-                            $image->insert($watermarkPath, 15, 15, 'bottom-right');
-                        }
-                        
-                        // Generate filename with .webp extension
-                        $filename = Str::uuid() . '.webp';
-                        $path = 'news-images/' . $filename;
-                        
-                        // Ensure directory exists
-                        $storagePath = storage_path('app/public/news-images');
-                        if (!file_exists($storagePath)) {
-                            mkdir($storagePath, 0755, true);
-                        }
-                        
-                        // Save as webp with 80% quality
-                        $image->encode(new \Intervention\Image\Encoders\WebpEncoder(80))
-                              ->save(storage_path('app/public/' . $path));
-                        
-                        return $path;
-                    })
-                    ->columnSpanFull(),
+                Repeater::make('images_with_captions')
+                    ->label('Foto/Gambar Post')
+                    ->schema([
+                        FileUpload::make('path')
+                            ->label('File Gambar')
+                            ->image()
+                            ->maxSize(2048)
+                            ->disk('public')
+                            ->directory('news-images')
+                            ->saveUploadedFileUsing(function (TemporaryUploadedFile $file): string {
+                                $manager = new ImageManager(new Driver());
+                                $image = $manager->decodePath($file->getRealPath());
+                                
+                                 // Add watermark if exists
+                                 $watermarkPath = public_path('images/watermark.png');
+                                 if (file_exists($watermarkPath)) {
+                                     $watermark = $manager->decodePath($watermarkPath);
+                                     // Scale watermark to be 15% of the target image width (proportional, larger)
+                                     $targetWidth = (int) round($image->width() * 0.15);
+                                     $watermark->scale(width: $targetWidth);
+                                     
+                                     // Insert watermark with proportional offset (e.g. 2.5% of width)
+                                     $offset = (int) round($image->width() * 0.025);
+                                     $image->insert($watermark, $offset, $offset, 'bottom-right');
+                                 }
+                                
+                                // Generate filename with .webp extension
+                                $filename = Str::uuid() . '.webp';
+                                $path = 'news-images/' . $filename;
+                                
+                                // Ensure directory exists
+                                $storagePath = storage_path('app/public/news-images');
+                                if (!file_exists($storagePath)) {
+                                    mkdir($storagePath, 0755, true);
+                                }
+                                
+                                // Save as webp with 80% quality
+                                $image->encode(new \Intervention\Image\Encoders\WebpEncoder(80))
+                                      ->save(storage_path('app/public/' . $path));
+                                
+                                return $path;
+                            })
+                            ->required(),
+                        TextInput::make('caption')
+                            ->label('Caption')
+                            ->placeholder('Masukkan caption untuk gambar ini...')
+                            ->maxLength(255),
+                    ])
+                    ->columnSpanFull()
+                    ->maxItems(5),
                 RichEditor::make('content')
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsDirectory('news-images')
