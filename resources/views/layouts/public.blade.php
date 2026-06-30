@@ -125,13 +125,6 @@
                                 Tentang Kami
                             </a>
                         </li>
-                        <li>
-                            <a href="{{ url('/admin') }}"
-                               class="text-sm text-white/55 hover:text-white hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2 group">
-                                <span class="w-3 h-px bg-orange-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                                Panel Admin
-                            </a>
-                        </li>
                     </ul>
                 </div>
 
