@@ -67,8 +67,8 @@
         </div>
 
         <!-- Main Footer Content -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 pb-14 border-b border-white/8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 pb-8 border-b border-white/8">
 
                 <!-- Col 1: Logo & Tagline (wider) -->
                 <div class="md:col-span-5 flex flex-col gap-5">
@@ -131,13 +131,13 @@
                 <!-- Col 3: Kategori -->
                 <div class="md:col-span-3">
                     <h4 class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/30 mb-5">Kategori</h4>
-                    <ul class="space-y-3">
-                        @foreach(\App\Models\Category::take(5)->get() as $footerCat)
-                        <li>
+                    <ul class="grid grid-cols-2 gap-x-4 gap-y-3">
+                        @foreach(\App\Models\Category::all() as $footerCat)
+                        <li class="min-w-0">
                             <a href="{{ route('category.show', $footerCat->slug) }}"
-                               class="text-sm text-white/55 hover:text-white hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2 group">
-                                <span class="w-3 h-px bg-orange-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                                {{ $footerCat->name }}
+                               class="text-sm text-white/55 hover:text-white hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2 group max-w-full">
+                                <span class="w-3 h-px bg-orange-600 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"></span>
+                                <span class="truncate">{{ $footerCat->name }}</span>
                             </a>
                         </li>
                         @endforeach
@@ -146,7 +146,7 @@
             </div>
 
             <!-- Bottom Bar -->
-            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p class="text-[0.7rem] text-white/25 tracking-wide">
                     &copy; {{ date('Y') }} <span class="text-white/40">vnews.id</span> &mdash; Seluruh hak cipta visual dilindungi.
                 </p>
