@@ -16,6 +16,7 @@ class Post extends Model
         'user_id',
         'category_id',
         'status',
+        'is_featured',
         'views_count',
         'published_at',
     ];
@@ -24,6 +25,7 @@ class Post extends Model
         'image' => 'array',
         'image_captions' => 'array',
         'published_at' => 'datetime',
+        'is_featured' => 'boolean',
     ];
 
     protected $appends = [

@@ -7,6 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
 
 class PostsTable
 {
@@ -30,6 +31,9 @@ class PostsTable
                         'published' => 'success',
                         'rejected' => 'danger',
                     }),
+                IconColumn::make('is_featured')
+                    ->boolean()
+                    ->label('Featured'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

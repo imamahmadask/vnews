@@ -18,14 +18,23 @@ class HomeController extends Controller
 
         $allPosts = $publishedBase()->latest('published_at')->get();
 
-        // Hero section: first 6 posts for carousel (3 slides × 2 posts)
-        $heroPosts = $allPosts->take(6);
+        // Hero section: up to 6 featured posts, fallback to top viewed
+        $heroPosts = $allPosts->where('is_featured', true)->take(6);
+        if ($heroPosts->count() < 6) {
+            $needed = 6 - $heroPosts->count();
+            $additionalPosts = $publishedBase()
+                ->whereNotIn('id', $heroPosts->pluck('id'))
+                ->orderByDesc('views_count')
+                ->take($needed)
+                ->get();
+            $heroPosts = $heroPosts->concat($additionalPosts);
+        }
 
         // Top posts by views_count
         $topPosts = $publishedBase()->orderByDesc('views_count')->take(6)->get();
 
-        // Other posts: next 8 after hero
-        $otherPosts = $allPosts->slice(6)->take(8);
+        // Other posts: next 8 after excluding hero posts
+        $otherPosts = $allPosts->whereNotIn('id', $heroPosts->pluck('id'))->take(8);
 
         // Politics: top 8 by views
         $politicsCategory = Category::where('slug', 'politik')->first();

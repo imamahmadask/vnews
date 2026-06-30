@@ -9,6 +9,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -47,6 +48,10 @@ class PostForm
                 TextInput::make('slug')
                     ->required()
                     ->unique(ignoreRecord: true),
+                Toggle::make('is_featured')
+                    ->label('Featured Post')
+                    ->helperText('Tampilkan post ini di bagian Hero Section pada Landing Page')
+                    ->default(false),
                 Repeater::make('images_with_captions')
                     ->label('Foto/Gambar Post')
                     ->schema([
