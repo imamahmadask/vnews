@@ -38,19 +38,13 @@
                         <img src="{{ asset('images/logo vnews.png') }}" alt="vnews.id" class="h-10 w-auto object-contain group-hover:opacity-80 transition-opacity">
                     </a>
                 </div>
-                <div class="flex items-center space-x-6">
-                    <form action="{{ url('/search') }}" method="GET" class="hidden sm:block relative">
-                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari berita..." class="w-48 bg-gray-100 border-none rounded-full px-4 py-2 text-sm focus:ring-orange-500 focus:bg-white transition-all">
+                <div class="flex items-center">
+                    <form action="{{ url('/search') }}" method="GET" class="relative">
+                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari berita..." class="w-36 sm:w-48 bg-gray-100 border-none rounded-full px-4 py-2 text-sm focus:ring-orange-500 focus:bg-white transition-all">
                         <button type="submit" class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </button>
                     </form>
-                    <a href="{{ route('about') }}" class="text-sm font-medium text-gray-600 hover:text-black transition-colors hidden sm:block">Tentang</a>
-                    @auth
-                        <a href="{{ url('/admin') }}" class="text-sm font-medium text-gray-600 hover:text-black transition-colors">Panel Admin</a>
-                    @else
-                        <a href="{{ url('/admin/login') }}" class="text-sm font-medium text-gray-600 hover:text-black transition-colors">Masuk</a>
-                    @endauth
                 </div>
             </div>
         </div>
