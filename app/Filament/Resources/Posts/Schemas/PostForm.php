@@ -2,21 +2,19 @@
 
 namespace App\Filament\Resources\Posts\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
-use Illuminate\Support\Str;
-
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Repeater;
-
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
-use Intervention\Image\ImageManager;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\WebpEncoder;
+use Intervention\Image\ImageManager;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class PostForm
 {
@@ -40,7 +38,7 @@ class PostForm
                             ->afterStateUpdated(fn (string $operation, $state, callable $set) => $set('slug', Str::slug($state))),
                         TextInput::make('slug')
                             ->required()
-                            ->unique('tags', 'slug')
+                            ->unique('tags', 'slug'),
                     ]),
                 TextInput::make('title')
                     ->required()
@@ -59,36 +57,35 @@ class PostForm
                             ->disk('public')
                             ->directory('news-images')
                             ->saveUploadedFileUsing(function (TemporaryUploadedFile $file): string {
-                                $manager = new ImageManager(new Driver());
+                                $manager = new ImageManager(new Driver);
                                 $image = $manager->decodePath($file->getRealPath());
-                                
-                                 // Add watermark if exists
-                                 $watermarkPath = public_path('images/watermark.png');
-                                 if (file_exists($watermarkPath)) {
-                                     $watermark = $manager->decodePath($watermarkPath);
-                                     // Scale watermark to be 15% of the target image width (proportional, larger)
-                                     $targetWidth = (int) round($image->width() * 0.15);
-                                     $watermark->scale(width: $targetWidth);
-                                     
-                                     // Insert watermark with proportional offset (e.g. 2.5% of width)
-                                     $offset = (int) round($image->width() * 0.025);
-                                     $image->insert($watermark, $offset, $offset, 'bottom-right');
-                                 }
-                                
+
+                                // Add watermark if exists
+                                $watermarkPath = public_path('images/watermark.png');
+                                if (file_exists($watermarkPath)) {
+                                    $watermark = $manager->decodePath($watermarkPath);
+                                    // Scale watermark to be 30% of the target image width (proportional, larger)
+                                    $targetWidth = (int) round($image->width() * 0.30);
+                                    $watermark->scale(width: $targetWidth);
+
+                                    // Insert watermark in the center
+                                    $image->insert($watermark, 0, 0, 'center');
+                                }
+
                                 // Generate filename with .webp extension
-                                $filename = Str::uuid() . '.webp';
-                                $path = 'news-images/' . $filename;
-                                
+                                $filename = Str::uuid().'.webp';
+                                $path = 'news-images/'.$filename;
+
                                 // Ensure directory exists
                                 $storagePath = storage_path('app/public/news-images');
-                                if (!file_exists($storagePath)) {
+                                if (! file_exists($storagePath)) {
                                     mkdir($storagePath, 0755, true);
                                 }
-                                
+
                                 // Save as webp with 80% quality
-                                $image->encode(new \Intervention\Image\Encoders\WebpEncoder(80))
-                                      ->save(storage_path('app/public/' . $path));
-                                
+                                $image->encode(new WebpEncoder(80))
+                                    ->save(storage_path('app/public/'.$path));
+
                                 return $path;
                             })
                             ->required(),
@@ -115,6 +112,7 @@ class PostForm
                                 'rejected' => 'Rejected',
                             ];
                         }
+
                         return [
                             'draft' => 'Draft',
                             'review' => 'Submit for Review',
