@@ -1,539 +1,592 @@
 @extends('layouts.public')
 
 @section('hero')
-{{-- ============================================
+    {{-- ============================================
      HERO SECTION — 2-Up Carousel (max 6 posts, 3 slides)
      ============================================ --}}
-@if($heroPosts && $heroPosts->count() > 0)
-    @php
-        $heroChunks = $heroPosts->chunk(2);
-        $totalSlides = $heroChunks->count();
-    @endphp
+    @if ($heroPosts && $heroPosts->count() > 0)
+        @php
+            $heroChunks = $heroPosts->chunk(2);
+            $totalSlides = $heroChunks->count();
+        @endphp
 
-    {{-- Section label --}}
-    <div class="hero-section-label">
-        <div class="hero-section-label__text">
-            <span class="hero-live-dot"></span>
-            <span>Berita Terkini</span>
-            <span class="hero-section-label__line"></span>
-        </div>
-    </div>
-
-    {{-- Carousel --}}
-    <div class="hero-carousel" id="heroCarousel" data-total-slides="{{ $totalSlides }}">
-        {{-- Track --}}
-        <div class="hero-carousel__track" id="heroTrack">
-            @foreach($heroChunks as $slideIndex => $chunk)
-                <div class="hero-carousel__slide">
-                    @foreach($chunk as $post)
-                        @php
-                            $postImage = is_array($post->image) ? ($post->image[0] ?? null) : $post->image;
-                            $excerpt = $post->content ? Str::limit(strip_tags($post->content), 120, '...') : '';
-                        @endphp
-
-                        <div>
-                            <a href="{{ route('posts.show', $post->slug) }}" class="hero-card">
-                                {{-- Photo --}}
-                                @if($postImage)
-                                    <img src="{{ Storage::url($postImage) }}"
-                                         alt="{{ $post->title }}"
-                                         class="hero-card__image"
-                                         loading="{{ $slideIndex === 0 ? 'eager' : 'lazy' }}"
-                                         decoding="async">
-                                @else
-                                    <div class="hero-card__noimage">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                        </svg>
-                                    </div>
-                                @endif
-
-                                {{-- Views badge --}}
-                                <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 z-10">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                    {{ number_format($post->views_count) }}
-                                </div>
-
-                                {{-- Gradient Overlay --}}
-                                <div class="hero-card__overlay"></div>
-
-                                {{-- Content --}}
-                                <div class="hero-card__content">
-                                    @if($post->category)
-                                        <span class="hero-card__category">{{ $post->category->name }}</span>
-                                    @endif
-
-                                    <h2 class="hero-card__title">{{ $post->title }}</h2>
-
-                                    @if($excerpt)
-                                        <p class="hero-card__excerpt">{{ $excerpt }}</p>
-                                    @endif
-
-                                    <div class="hero-card__meta">
-                                        <span>{{ $post->user->name }}</span>
-                                        <span class="hero-card__meta-dot"></span>
-                                        <span>{{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}</span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    @endforeach
+        {{-- Hero Section Wrapper --}}
+        <div class="bg-white w-full">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-0">
+                {{-- Section label (Footer Style, constrained width) --}}
+                <div class="bg-[#0B192C] px-5 py-4 mb-4">
+                    <div class="flex items-center gap-4">
+                        <span class="hero-live-dot"></span>
+                        <span class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/50 px-2">Berita
+                            Terkini</span>
+                        <span class="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent"></span>
+                    </div>
                 </div>
-            @endforeach
-        </div>
 
-        {{-- Navigation Arrows --}}
-        @if($totalSlides > 1)
-            <button class="hero-carousel__nav hero-carousel__nav--prev" id="heroPrev" aria-label="Previous slide">
-                <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-                </svg>
-            </button>
-            <button class="hero-carousel__nav hero-carousel__nav--next" id="heroNext" aria-label="Next slide">
-                <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
-                </svg>
-            </button>
+                {{-- Carousel --}}
+                <div class="hero-carousel overflow-hidden" id="heroCarousel" data-total-slides="{{ $totalSlides }}">
+                    {{-- Track --}}
+                    <div class="hero-carousel__track" id="heroTrack">
+                        @foreach ($heroChunks as $slideIndex => $chunk)
+                            <div class="hero-carousel__slide">
+                                @foreach ($chunk as $post)
+                                    @php
+                                        $postImage = is_array($post->image) ? $post->image[0] ?? null : $post->image;
+                                        $excerpt = $post->content
+                                            ? Str::limit(strip_tags($post->content), 120, '...')
+                                            : '';
+                                    @endphp
 
-            {{-- Dot indicators --}}
-            <div class="hero-carousel__dots" id="heroDots">
-                @for($i = 0; $i < $totalSlides; $i++)
-                    <button class="hero-carousel__dot {{ $i === 0 ? 'is-active' : '' }}"
-                            data-slide="{{ $i }}"
-                            aria-label="Go to slide {{ $i + 1 }}"></button>
-                @endfor
+                                    <div class="relative w-full" style="padding-bottom: 66.67%;">
+                                        <a href="{{ route('posts.show', $post->slug) }}" class="hero-card">
+                                            {{-- Photo --}}
+                                            @if ($postImage)
+                                                <img src="{{ Storage::url($postImage) }}" alt="{{ $post->title }}"
+                                                    class="hero-card__image"
+                                                    loading="{{ $slideIndex === 0 ? 'eager' : 'lazy' }}" decoding="async">
+                                            @else
+                                                <div class="hero-card__noimage">
+                                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="1.5"
+                                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                </div>
+                                            @endif
+
+                                            {{-- Views badge --}}
+                                            <div
+                                                class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 z-10">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                                {{ number_format($post->views_count) }}
+                                            </div>
+
+                                            {{-- Gradient Overlay --}}
+                                            <div class="hero-card__overlay"></div>
+
+                                            {{-- Content --}}
+                                            <div class="hero-card__content">
+                                                @if ($post->category)
+                                                    <span class="hero-card__category">{{ $post->category->name }}</span>
+                                                @endif
+
+                                                <h2 class="hero-card__title">{{ $post->title }}</h2>
+
+                                                @if ($excerpt)
+                                                    <p class="hero-card__excerpt">{{ $excerpt }}</p>
+                                                @endif
+
+                                                <div class="hero-card__meta">
+                                                    <span>{{ $post->user->name }}</span>
+                                                    <span class="hero-card__meta-dot"></span>
+                                                    <span>{{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endforeach
+                    </div>
+
+                    {{-- Navigation Arrows --}}
+                    @if ($totalSlides > 1)
+                        <button class="hero-carousel__nav hero-carousel__nav--prev" id="heroPrev"
+                            aria-label="Previous slide">
+                            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                            </svg>
+                        </button>
+                        <button class="hero-carousel__nav hero-carousel__nav--next" id="heroNext" aria-label="Next slide">
+                            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </button>
+
+                        {{-- Dot indicators --}}
+                        <div class="hero-carousel__dots" id="heroDots">
+                            @for ($i = 0; $i < $totalSlides; $i++)
+                                <button class="hero-carousel__dot {{ $i === 0 ? 'is-active' : '' }}"
+                                    data-slide="{{ $i }}"
+                                    aria-label="Go to slide {{ $i + 1 }}"></button>
+                            @endfor
+                        </div>
+                    @endif
+                </div>
             </div>
-        @endif
-    </div>
-@endif
+        </div>
+    @endif
 @endsection
 
 @section('content')
-<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
-    
-    {{-- Category Navigation --}}
-    <div class="mb-10 flex space-x-2 overflow-x-auto pb-4 scrollbar-hide">
-        <a href="{{ route('home') }}" class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold transition-colors bg-black text-white">All</a>
-        @foreach($categories as $cat)
-            <a href="{{ route('category.show', $cat->slug) }}" class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">{{ $cat->name }}</a>
-        @endforeach
-    </div>
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
 
-    @if($topPosts && $topPosts->count() > 0)
-        {{-- Top Posts --}}
-        <div class="mb-16">
-            <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">Berita Utama</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @foreach($topPosts as $post)
-                    <a href="{{ route('posts.show', $post->slug) }}" class="group block">
-                        <div class="relative w-full aspect-[6/4] overflow-hidden mb-4 bg-gray-100">
-                            @if($post->image)
-                                @php $topImage = is_array($post->image) ? $post->image[0] : $post->image; @endphp
-                                <img src="{{ Storage::url($topImage) }}" alt="{{ $post->title }}" class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
-                            @endif
-                            {{-- Views badge --}}
-                            <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                                {{ number_format($post->views_count) }}
-                            </div>
-                        </div>
-                        @if($post->category)
-                            <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-2 block">
-                                {{ $post->category->name }}
-                            </span>
-                        @endif
-                        <h4 class="text-xl font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-tight mb-2">{{ $post->title }}</h4>
-                        <p class="text-sm text-gray-500">{{ $post->user->name }} &middot; {{ $post->created_at->format('M d, Y') }}</p>
-                    </a>
-                @endforeach
-            </div>
+        {{-- Category Navigation --}}
+        <div class="mb-10 flex space-x-2 overflow-x-auto pb-4 scrollbar-hide">
+            <a href="{{ route('home') }}"
+                class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold transition-colors bg-black text-white">All</a>
+            @foreach ($categories as $cat)
+                <a href="{{ route('category.show', $cat->slug) }}"
+                    class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">{{ $cat->name }}</a>
+            @endforeach
         </div>
-    @endif
 
-    @if($otherPosts && $otherPosts->count() > 0)
-        {{-- Other Posts Grid --}}
-        <div class="mb-16">
-            <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">Berita Lainnya</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @foreach($otherPosts as $post)
-                    <a href="{{ route('posts.show', $post->slug) }}" class="group block">
-                        {{-- Image --}}
-                        <div class="relative w-full aspect-[6/4] overflow-hidden mb-3 bg-gray-100">
-                            @if($post->image)
-                                @php $otherImage = is_array($post->image) ? $post->image[0] : $post->image; @endphp
-                                <img src="{{ Storage::url($otherImage) }}"
-                                     alt="{{ $post->title }}"
-                                     class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
-                            @else
-                                <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        @if ($topPosts && $topPosts->count() > 0)
+            {{-- Top Posts --}}
+            <div class="mb-16">
+                <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">Berita Utama</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    @foreach ($topPosts as $post)
+                        <a href="{{ route('posts.show', $post->slug) }}" class="group block">
+                            <div class="relative w-full aspect-[6/4] overflow-hidden mb-4 bg-gray-100">
+                                @if ($post->image)
+                                    @php $topImage = is_array($post->image) ? $post->image[0] : $post->image; @endphp
+                                    <img src="{{ Storage::url($topImage) }}" alt="{{ $post->title }}"
+                                        class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
+                                @endif
+                                {{-- Views badge --}}
+                                <div
+                                    class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
+                                    {{ number_format($post->views_count) }}
                                 </div>
-                            @endif
-                            {{-- Views badge --}}
-                            <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                                {{ number_format($post->views_count) }}
                             </div>
-                        </div>
-                        {{-- Content --}}
-                        @if($post->category)
-                            <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-1.5 block">
-                                {{ $post->category->name }}
-                            </span>
-                        @endif
-                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-2"
-                            style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
-                            {{ $post->title }}
-                        </h4>
-                        <p class="text-xs text-gray-400">
-                            {{ $post->user->name }} &middot; {{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}
-                        </p>
-                    </a>
-                @endforeach
-            </div>
-        </div>
-    @endif
-
-    {{-- ===== POLITICS SECTION ===== --}}
-    @if($politicsPosts && $politicsPosts->count() > 0)
-        <div class="mb-16">
-            {{-- Section Header --}}
-            <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-2">
-                <div class="flex items-center gap-3">
-                    <span class="w-1 h-6 bg-orange-600 rounded-full block"></span>
-                    <h3 class="text-2xl font-bold text-gray-900">Politik</h3>
-                    <span class="text-xs font-bold tracking-widest uppercase text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">Top Views</span>
+                            @if ($post->category)
+                                <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-2 block">
+                                    {{ $post->category->name }}
+                                </span>
+                            @endif
+                            <h4
+                                class="text-xl font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-tight mb-2">
+                                {{ $post->title }}</h4>
+                            <p class="text-sm text-gray-500">{{ $post->user->name }} &middot;
+                                {{ $post->created_at->format('M d, Y') }}</p>
+                        </a>
+                    @endforeach
                 </div>
-                @if($politicsCategory)
-                    <a href="{{ route('category.show', $politicsCategory->slug) }}"
-                       class="text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors flex items-center gap-1">
-                        Lihat Semua
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                @endif
             </div>
+        @endif
 
-            {{-- Cards --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @foreach($politicsPosts as $post)
-                    <a href="{{ route('posts.show', $post->slug) }}" class="group block">
-                        {{-- Image --}}
-                        <div class="relative w-full aspect-[6/4] overflow-hidden mb-3 bg-gray-100">
-                            @if($post->image)
-                                @php $img = is_array($post->image) ? $post->image[0] : $post->image; @endphp
-                                <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"
-                                     class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
-                            @else
-                                <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        @if ($otherPosts && $otherPosts->count() > 0)
+            {{-- Other Posts Grid --}}
+            <div class="mb-16">
+                <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">Berita Lainnya</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    @foreach ($otherPosts as $post)
+                        <a href="{{ route('posts.show', $post->slug) }}" class="group block">
+                            {{-- Image --}}
+                            <div class="relative w-full aspect-[6/4] overflow-hidden mb-3 bg-gray-100">
+                                @if ($post->image)
+                                    @php $otherImage = is_array($post->image) ? $post->image[0] : $post->image; @endphp
+                                    <img src="{{ Storage::url($otherImage) }}" alt="{{ $post->title }}"
+                                        class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
+                                @else
+                                    <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                @endif
+                                {{-- Views badge --}}
+                                <div
+                                    class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
+                                    {{ number_format($post->views_count) }}
                                 </div>
-                            @endif
-                            {{-- Views badge --}}
-                            <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                                {{ number_format($post->views_count) }}
                             </div>
-                        </div>
-                        {{-- Content --}}
-                        <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-1.5 block">Politik</span>
-                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-2"
-                            style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
-                            {{ $post->title }}
-                        </h4>
-                        <p class="text-xs text-gray-400">
-                            {{ $post->user->name }} &middot; {{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}
-                        </p>
-                    </a>
-                @endforeach
-            </div>
-        </div>
-    @endif
-
-    {{-- ===== SPORTS SECTION ===== --}}
-    @if($sportsPosts && $sportsPosts->count() > 0)
-        <div class="mb-16">
-            {{-- Section Header --}}
-            <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-2">
-                <div class="flex items-center gap-3">
-                    <span class="w-1 h-6 bg-orange-600 rounded-full block"></span>
-                    <h3 class="text-2xl font-bold text-gray-900">Olahraga</h3>
-                    <span class="text-xs font-bold tracking-widest uppercase text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">Top Views</span>
+                            {{-- Content --}}
+                            @if ($post->category)
+                                <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-1.5 block">
+                                    {{ $post->category->name }}
+                                </span>
+                            @endif
+                            <h4 class="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-2"
+                                style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                                {{ $post->title }}
+                            </h4>
+                            <p class="text-xs text-gray-400">
+                                {{ $post->user->name }} &middot;
+                                {{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}
+                            </p>
+                        </a>
+                    @endforeach
                 </div>
-                @if($sportsCategory)
-                    <a href="{{ route('category.show', $sportsCategory->slug) }}"
-                       class="text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors flex items-center gap-1">
-                        Lihat Semua
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                @endif
             </div>
+        @endif
 
-            {{-- Cards --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @foreach($sportsPosts as $post)
-                    <a href="{{ route('posts.show', $post->slug) }}" class="group block">
-                        {{-- Image --}}
-                        <div class="relative w-full aspect-[6/4] overflow-hidden mb-3 bg-gray-100">
-                            @if($post->image)
-                                @php $img = is_array($post->image) ? $post->image[0] : $post->image; @endphp
-                                <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"
-                                     class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
-                            @else
-                                <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                </div>
-                            @endif
-                            {{-- Views badge --}}
-                            <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                                {{ number_format($post->views_count) }}
-                            </div>
-                        </div>
-                        {{-- Content --}}
-                        <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-1.5 block">Olahraga</span>
-                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-2"
-                            style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
-                            {{ $post->title }}
-                        </h4>
-                        <p class="text-xs text-gray-400">
-                            {{ $post->user->name }} &middot; {{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}
-                        </p>
-                    </a>
-                @endforeach
-            </div>
-        </div>
-    @endif
-
-    {{-- ===== ENTERTAINMENT SECTION ===== --}}
-    @if($entertainmentPosts && $entertainmentPosts->count() > 0)
-        <div class="mb-16">
-            {{-- Section Header --}}
-            <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-2">
-                <div class="flex items-center gap-3">
-                    <span class="w-1 h-6 bg-orange-600 rounded-full block"></span>
-                    <h3 class="text-2xl font-bold text-gray-900">Hiburan</h3>
-                    <span class="text-xs font-bold tracking-widest uppercase text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">Top Views</span>
+        {{-- ===== POLITICS SECTION ===== --}}
+        @if ($politicsPosts && $politicsPosts->count() > 0)
+            <div class="mb-16">
+                {{-- Section Header --}}
+                <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-2">
+                    <div class="flex items-center gap-3">
+                        <span class="w-1 h-6 bg-orange-600 rounded-full block"></span>
+                        <h3 class="text-2xl font-bold text-gray-900">Politik</h3>
+                        <span
+                            class="text-xs font-bold tracking-widest uppercase text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">Top
+                            Views</span>
+                    </div>
+                    @if ($politicsCategory)
+                        <a href="{{ route('category.show', $politicsCategory->slug) }}"
+                            class="text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors flex items-center gap-1">
+                            Lihat Semua
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    @endif
                 </div>
-                @if($entertainmentCategory)
-                    <a href="{{ route('category.show', $entertainmentCategory->slug) }}"
-                       class="text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors flex items-center gap-1">
-                        Lihat Semua
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                @endif
-            </div>
 
-            {{-- Cards --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @foreach($entertainmentPosts as $post)
-                    <a href="{{ route('posts.show', $post->slug) }}" class="group block">
-                        {{-- Image --}}
-                        <div class="relative w-full aspect-[6/4] overflow-hidden mb-3 bg-gray-100">
-                            @if($post->image)
-                                @php $img = is_array($post->image) ? $post->image[0] : $post->image; @endphp
-                                <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"
-                                     class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
-                            @else
-                                <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                {{-- Cards --}}
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    @foreach ($politicsPosts as $post)
+                        <a href="{{ route('posts.show', $post->slug) }}" class="group block">
+                            {{-- Image --}}
+                            <div class="relative w-full aspect-[6/4] overflow-hidden mb-3 bg-gray-100">
+                                @if ($post->image)
+                                    @php $img = is_array($post->image) ? $post->image[0] : $post->image; @endphp
+                                    <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"
+                                        class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
+                                @else
+                                    <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                @endif
+                                {{-- Views badge --}}
+                                <div
+                                    class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
+                                    {{ number_format($post->views_count) }}
                                 </div>
-                            @endif
-                            {{-- Views badge --}}
-                            <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                                {{ number_format($post->views_count) }}
                             </div>
-                        </div>
-                        {{-- Content --}}
-                        <span class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-1.5 block">Hiburan</span>
-                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-2"
-                            style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
-                            {{ $post->title }}
-                        </h4>
-                        <p class="text-xs text-gray-400">
-                            {{ $post->user->name }} &middot; {{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}
-                        </p>
-                    </a>
-                @endforeach
+                            {{-- Content --}}
+                            <span
+                                class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-1.5 block">Politik</span>
+                            <h4 class="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-2"
+                                style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                                {{ $post->title }}
+                            </h4>
+                            <p class="text-xs text-gray-400">
+                                {{ $post->user->name }} &middot;
+                                {{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}
+                            </p>
+                        </a>
+                    @endforeach
+                </div>
             </div>
-        </div>
-    @endif
+        @endif
 
-    @if((!$heroPosts || $heroPosts->count() == 0) && (!$topPosts || $topPosts->count() == 0))
-        <div class="flex flex-col items-center justify-center py-20 text-center">
-            <h3 class="text-xl font-semibold text-gray-900">Belum ada berita visual</h3>
-            <p class="text-gray-500 mt-2">Kunjungi lagi nanti untuk jurnalisme foto yang menakjubkan.</p>
-        </div>
-    @endif
+        {{-- ===== SPORTS SECTION ===== --}}
+        @if ($sportsPosts && $sportsPosts->count() > 0)
+            <div class="mb-16">
+                {{-- Section Header --}}
+                <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-2">
+                    <div class="flex items-center gap-3">
+                        <span class="w-1 h-6 bg-orange-600 rounded-full block"></span>
+                        <h3 class="text-2xl font-bold text-gray-900">Olahraga</h3>
+                        <span
+                            class="text-xs font-bold tracking-widest uppercase text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">Top
+                            Views</span>
+                    </div>
+                    @if ($sportsCategory)
+                        <a href="{{ route('category.show', $sportsCategory->slug) }}"
+                            class="text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors flex items-center gap-1">
+                            Lihat Semua
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    @endif
+                </div>
 
-</main>
+                {{-- Cards --}}
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    @foreach ($sportsPosts as $post)
+                        <a href="{{ route('posts.show', $post->slug) }}" class="group block">
+                            {{-- Image --}}
+                            <div class="relative w-full aspect-[6/4] overflow-hidden mb-3 bg-gray-100">
+                                @if ($post->image)
+                                    @php $img = is_array($post->image) ? $post->image[0] : $post->image; @endphp
+                                    <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"
+                                        class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
+                                @else
+                                    <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                @endif
+                                {{-- Views badge --}}
+                                <div
+                                    class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    {{ number_format($post->views_count) }}
+                                </div>
+                            </div>
+                            {{-- Content --}}
+                            <span
+                                class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-1.5 block">Olahraga</span>
+                            <h4 class="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-2"
+                                style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                                {{ $post->title }}
+                            </h4>
+                            <p class="text-xs text-gray-400">
+                                {{ $post->user->name }} &middot;
+                                {{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}
+                            </p>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        {{-- ===== ENTERTAINMENT SECTION ===== --}}
+        @if ($entertainmentPosts && $entertainmentPosts->count() > 0)
+            <div class="mb-16">
+                {{-- Section Header --}}
+                <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-2">
+                    <div class="flex items-center gap-3">
+                        <span class="w-1 h-6 bg-orange-600 rounded-full block"></span>
+                        <h3 class="text-2xl font-bold text-gray-900">Hiburan</h3>
+                        <span
+                            class="text-xs font-bold tracking-widest uppercase text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">Top
+                            Views</span>
+                    </div>
+                    @if ($entertainmentCategory)
+                        <a href="{{ route('category.show', $entertainmentCategory->slug) }}"
+                            class="text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors flex items-center gap-1">
+                            Lihat Semua
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    @endif
+                </div>
+
+                {{-- Cards --}}
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    @foreach ($entertainmentPosts as $post)
+                        <a href="{{ route('posts.show', $post->slug) }}" class="group block">
+                            {{-- Image --}}
+                            <div class="relative w-full aspect-[6/4] overflow-hidden mb-3 bg-gray-100">
+                                @if ($post->image)
+                                    @php $img = is_array($post->image) ? $post->image[0] : $post->image; @endphp
+                                    <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"
+                                        class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105">
+                                @else
+                                    <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                @endif
+                                {{-- Views badge --}}
+                                <div
+                                    class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    {{ number_format($post->views_count) }}
+                                </div>
+                            </div>
+                            {{-- Content --}}
+                            <span
+                                class="text-xs font-bold tracking-wider text-orange-600 uppercase mb-1.5 block">Hiburan</span>
+                            <h4 class="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-2"
+                                style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                                {{ $post->title }}
+                            </h4>
+                            <p class="text-xs text-gray-400">
+                                {{ $post->user->name }} &middot;
+                                {{ $post->published_at ? $post->published_at->diffForHumans() : $post->created_at->diffForHumans() }}
+                            </p>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        @if ((!$heroPosts || $heroPosts->count() == 0) && (!$topPosts || $topPosts->count() == 0))
+            <div class="flex flex-col items-center justify-center py-20 text-center">
+                <h3 class="text-xl font-semibold text-gray-900">Belum ada berita visual</h3>
+                <p class="text-gray-500 mt-2">Kunjungi lagi nanti untuk jurnalisme foto yang menakjubkan.</p>
+            </div>
+        @endif
+
+    </main>
 @endsection
 
 @section('extra_js')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const carousel = document.getElementById('heroCarousel');
-    if (!carousel) return;
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const carousel = document.getElementById('heroCarousel');
+            if (!carousel) return;
 
-    const track = document.getElementById('heroTrack');
-    const prevBtn = document.getElementById('heroPrev');
-    const nextBtn = document.getElementById('heroNext');
-    const dotsContainer = document.getElementById('heroDots');
-    const totalSlides = parseInt(carousel.dataset.totalSlides);
+            const track = document.getElementById('heroTrack');
+            const prevBtn = document.getElementById('heroPrev');
+            const nextBtn = document.getElementById('heroNext');
+            const dotsContainer = document.getElementById('heroDots');
+            const totalSlides = parseInt(carousel.dataset.totalSlides);
 
-    if (totalSlides < 2) return;
+            if (totalSlides < 2) return;
 
-    // --- Infinite loop: clone first & last slides ---
-    const slides = Array.from(track.children);
-    const firstClone = slides[0].cloneNode(true);
-    const lastClone = slides[slides.length - 1].cloneNode(true);
-    firstClone.setAttribute('aria-hidden', 'true');
-    lastClone.setAttribute('aria-hidden', 'true');
-    track.appendChild(firstClone);           // append clone of first at end
-    track.insertBefore(lastClone, slides[0]); // prepend clone of last at start
+            // --- Infinite loop: clone first & last slides ---
+            const slides = Array.from(track.children);
+            const firstClone = slides[0].cloneNode(true);
+            const lastClone = slides[slides.length - 1].cloneNode(true);
+            firstClone.setAttribute('aria-hidden', 'true');
+            lastClone.setAttribute('aria-hidden', 'true');
+            track.appendChild(firstClone); // append clone of first at end
+            track.insertBefore(lastClone, slides[0]); // prepend clone of last at start
 
-    // With clones: [cloneLast] [slide0] [slide1] [slide2] [cloneFirst]
-    // Index 0 = cloneLast, 1..N = real slides, N+1 = cloneFirst
-    let index = 1; // start at first real slide
-    let isTransitioning = false;
-    let startX = 0;
-    let currentX = 0;
-    let isDragging = false;
+            // With clones: [cloneLast] [slide0] [slide1] [slide2] [cloneFirst]
+            // Index 0 = cloneLast, 1..N = real slides, N+1 = cloneFirst
+            let index = 1; // start at first real slide
+            let isTransitioning = false;
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
 
-    function setPosition(i, animate) {
-        if (animate) {
-            track.style.transition = 'transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-        } else {
-            track.style.transition = 'none';
-        }
-        track.style.transform = `translateX(-${i * 100}%)`;
-    }
+            function setPosition(i, animate) {
+                if (animate) {
+                    track.style.transition = 'transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                } else {
+                    track.style.transition = 'none';
+                }
+                track.style.transform = `translateX(-${i * 100}%)`;
+            }
 
-    function updateDots() {
-        if (!dotsContainer) return;
-        // Map index to real slide: index 1..totalSlides => dot 0..totalSlides-1
-        let realIndex = index - 1;
-        if (realIndex < 0) realIndex = totalSlides - 1;
-        if (realIndex >= totalSlides) realIndex = 0;
-        dotsContainer.querySelectorAll('.hero-carousel__dot').forEach((dot, i) => {
-            dot.classList.toggle('is-active', i === realIndex);
-        });
-    }
+            function updateDots() {
+                if (!dotsContainer) return;
+                // Map index to real slide: index 1..totalSlides => dot 0..totalSlides-1
+                let realIndex = index - 1;
+                if (realIndex < 0) realIndex = totalSlides - 1;
+                if (realIndex >= totalSlides) realIndex = 0;
+                dotsContainer.querySelectorAll('.hero-carousel__dot').forEach((dot, i) => {
+                    dot.classList.toggle('is-active', i === realIndex);
+                });
+            }
 
-    function goTo(i) {
-        if (isTransitioning) return;
-        isTransitioning = true;
-        index = i;
-        setPosition(index, true);
-        updateDots();
-    }
+            function goTo(i) {
+                if (isTransitioning) return;
+                isTransitioning = true;
+                index = i;
+                setPosition(index, true);
+                updateDots();
+            }
 
-    // After transition ends, snap to real slide if on a clone
-    track.addEventListener('transitionend', () => {
-        isTransitioning = false;
-        if (index === 0) {
-            // On cloneLast -> jump to real last
-            index = totalSlides;
+            // After transition ends, snap to real slide if on a clone
+            track.addEventListener('transitionend', () => {
+                isTransitioning = false;
+                if (index === 0) {
+                    // On cloneLast -> jump to real last
+                    index = totalSlides;
+                    setPosition(index, false);
+                } else if (index === totalSlides + 1) {
+                    // On cloneFirst -> jump to real first
+                    index = 1;
+                    setPosition(index, false);
+                }
+            });
+
+            // Initialize position (no animation)
             setPosition(index, false);
-        } else if (index === totalSlides + 1) {
-            // On cloneFirst -> jump to real first
-            index = 1;
-            setPosition(index, false);
-        }
-    });
+            updateDots();
 
-    // Initialize position (no animation)
-    setPosition(index, false);
-    updateDots();
+            // Arrow clicks
+            prevBtn.addEventListener('click', () => goTo(index - 1));
+            nextBtn.addEventListener('click', () => goTo(index + 1));
 
-    // Arrow clicks
-    prevBtn.addEventListener('click', () => goTo(index - 1));
-    nextBtn.addEventListener('click', () => goTo(index + 1));
+            // Dot clicks
+            if (dotsContainer) {
+                dotsContainer.addEventListener('click', (e) => {
+                    const dot = e.target.closest('.hero-carousel__dot');
+                    if (dot) goTo(parseInt(dot.dataset.slide) + 1); // +1 because of prepended clone
+                });
+            }
 
-    // Dot clicks
-    if (dotsContainer) {
-        dotsContainer.addEventListener('click', (e) => {
-            const dot = e.target.closest('.hero-carousel__dot');
-            if (dot) goTo(parseInt(dot.dataset.slide) + 1); // +1 because of prepended clone
+            // Touch swipe
+            carousel.addEventListener('touchstart', (e) => {
+                if (isTransitioning) return;
+                startX = e.touches[0].clientX;
+                isDragging = true;
+                track.style.transition = 'none';
+            }, {
+                passive: true
+            });
+
+            carousel.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                currentX = e.touches[0].clientX;
+                const diff = currentX - startX;
+                const offset = -(index * 100) + (diff / carousel.offsetWidth * 100);
+                track.style.transform = `translateX(${offset}%)`;
+            }, {
+                passive: true
+            });
+
+            carousel.addEventListener('touchend', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                const diff = currentX - startX;
+                const threshold = carousel.offsetWidth * 0.15;
+
+                if (diff < -threshold) {
+                    goTo(index + 1);
+                } else if (diff > threshold) {
+                    goTo(index - 1);
+                } else {
+                    goTo(index); // snap back
+                }
+                startX = 0;
+                currentX = 0;
+            });
+
+            // Keyboard nav
+            carousel.setAttribute('tabindex', '0');
+            carousel.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') goTo(index - 1);
+                if (e.key === 'ArrowRight') goTo(index + 1);
+            });
         });
-    }
-
-    // Touch swipe
-    carousel.addEventListener('touchstart', (e) => {
-        if (isTransitioning) return;
-        startX = e.touches[0].clientX;
-        isDragging = true;
-        track.style.transition = 'none';
-    }, { passive: true });
-
-    carousel.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        currentX = e.touches[0].clientX;
-        const diff = currentX - startX;
-        const offset = -(index * 100) + (diff / carousel.offsetWidth * 100);
-        track.style.transform = `translateX(${offset}%)`;
-    }, { passive: true });
-
-    carousel.addEventListener('touchend', () => {
-        if (!isDragging) return;
-        isDragging = false;
-        const diff = currentX - startX;
-        const threshold = carousel.offsetWidth * 0.15;
-
-        if (diff < -threshold) {
-            goTo(index + 1);
-        } else if (diff > threshold) {
-            goTo(index - 1);
-        } else {
-            goTo(index); // snap back
-        }
-        startX = 0;
-        currentX = 0;
-    });
-
-    // Keyboard nav
-    carousel.setAttribute('tabindex', '0');
-    carousel.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') goTo(index - 1);
-        if (e.key === 'ArrowRight') goTo(index + 1);
-    });
-});
-</script>
+    </script>
 @endsection
