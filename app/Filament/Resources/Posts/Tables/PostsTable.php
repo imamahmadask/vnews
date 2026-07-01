@@ -35,6 +35,9 @@ class PostsTable
                 IconColumn::make('is_featured')
                     ->boolean()
                     ->label('Featured'),
+                TextColumn::make('published_at')
+                    ->dateTime()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
