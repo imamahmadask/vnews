@@ -16,7 +16,8 @@ class PostsTable
         return $table
             ->columns([
                 TextColumn::make('title')
-                    ->searchable(),
+                    ->searchable()
+                    ->limit(50),
                 TextColumn::make('category.name')
                     ->searchable()
                     ->sortable(),
