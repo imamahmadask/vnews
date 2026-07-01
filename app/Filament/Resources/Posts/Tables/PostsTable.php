@@ -44,7 +44,22 @@ class PostsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                \Filament\Tables\Filters\SelectFilter::make('category_id')
+                    ->relationship('category', 'name')
+                    ->label('Kategori'),
+                \Filament\Tables\Filters\TernaryFilter::make('is_featured')
+                    ->label('Featured'),
+                \Filament\Tables\Filters\SelectFilter::make('user_id')
+                    ->relationship('user', 'name')
+                    ->label('Penulis'),
+                \Filament\Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'draft' => 'Draft',
+                        'review' => 'Review',
+                        'published' => 'Published',
+                        'rejected' => 'Rejected',
+                    ])
+                    ->label('Status'),
             ])
             ->recordActions([
                 EditAction::make(),
