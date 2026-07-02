@@ -232,7 +232,7 @@
         @endif
 
                 {{-- ===== CATEGORY SECTIONS ===== --}}
-        @if (isset($categorySections) && count($categorySections) > 0)
+        @if (false && isset($categorySections) && count($categorySections) > 0) {{-- Temporarily hidden --}}
             @foreach ($categorySections as $section)
                 <div class="mb-16">
                     {{-- Section Header --}}
