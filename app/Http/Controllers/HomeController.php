@@ -31,10 +31,10 @@ class HomeController extends Controller
         }
 
         // Top posts by views_count
-        $topPosts = $publishedBase()->orderByDesc('views_count')->take(6)->get();
+        $topPosts = $publishedBase()->orderByDesc('views_count')->take(3)->get();
 
         // Other posts: next 6 after excluding hero posts
-        $otherPosts = $allPosts->whereNotIn('id', $heroPosts->pluck('id'))->take(6);
+        $otherPosts = $allPosts->whereNotIn('id', $heroPosts->pluck('id'))->take(3);
 
         $categorySections = [];
 
