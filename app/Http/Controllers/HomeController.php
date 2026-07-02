@@ -33,32 +33,25 @@ class HomeController extends Controller
         // Top posts by views_count
         $topPosts = $publishedBase()->orderByDesc('views_count')->take(6)->get();
 
-        // Other posts: next 8 after excluding hero posts
-        $otherPosts = $allPosts->whereNotIn('id', $heroPosts->pluck('id'))->take(8);
+        // Other posts: next 6 after excluding hero posts
+        $otherPosts = $allPosts->whereNotIn('id', $heroPosts->pluck('id'))->take(6);
 
-        // Politics: top 8 by views
-        $politicsCategory = Category::where('slug', 'politik')->first();
-        $politicsPosts = $politicsCategory
-            ? $publishedBase()->where('category_id', $politicsCategory->id)->orderByDesc('views_count')->take(8)->get()
-            : collect();
+        $categorySections = [];
 
-        // Sports: top 8 by views
-        $sportsCategory = Category::where('slug', 'olahraga')->first();
-        $sportsPosts = $sportsCategory
-            ? $publishedBase()->where('category_id', $sportsCategory->id)->orderByDesc('views_count')->take(8)->get()
-            : collect();
-
-        // Entertainment: top 8 by views
-        $entertainmentCategory = Category::where('slug', 'hiburan')->first();
-        $entertainmentPosts = $entertainmentCategory
-            ? $publishedBase()->where('category_id', $entertainmentCategory->id)->orderByDesc('views_count')->take(8)->get()
-            : collect();
+        foreach ($categories as $cat) {
+            // Fetch top 4 latest posts for each category
+            $posts = $publishedBase()->where('category_id', $cat->id)->latest('published_at')->take(4)->get();
+            if ($posts->isNotEmpty()) {
+                $categorySections[] = (object)[
+                    'category' => $cat,
+                    'posts' => $posts
+                ];
+            }
+        }
 
         return view('welcome', compact(
             'categories', 'heroPosts', 'topPosts', 'otherPosts',
-            'politicsPosts', 'politicsCategory',
-            'sportsPosts', 'sportsCategory',
-            'entertainmentPosts', 'entertainmentCategory'
+            'categorySections'
         ));
     }
 }
