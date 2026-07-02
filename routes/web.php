@@ -15,6 +15,14 @@ Route::get('/search', [PostController::class, 'search'])->name('search');
 
 Route::get('/post/{slug}', [PostController::class, 'show'])->name('posts.show');
 
+Route::get('/posts/embed-360', function (\Illuminate\Http\Request $request) {
+    $path = $request->query('path');
+    if (!$path || !\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+        abort(404);
+    }
+    return view('posts.embed_360', ['url' => \Illuminate\Support\Facades\Storage::url($path)]);
+})->name('posts.embed-360');
+
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
 // Helper route for Shared Hosting to link storage

@@ -11,6 +11,8 @@ class Post extends Model
         'slug',
         'content',
         'image',
+        'image_360',
+        'image_360_caption',
         'image_captions',
         'images_with_captions',
         'user_id',
@@ -98,6 +100,13 @@ class Post extends Model
                     if (\Illuminate\Support\Facades\Storage::disk('public')->exists($image)) {
                         \Illuminate\Support\Facades\Storage::disk('public')->delete($image);
                     }
+                }
+            }
+
+            // Hapus gambar 360
+            if ($post->image_360) {
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($post->image_360)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($post->image_360);
                 }
             }
 

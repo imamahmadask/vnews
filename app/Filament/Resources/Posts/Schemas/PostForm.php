@@ -101,6 +101,19 @@ class PostForm
                     ])
                     ->columnSpanFull()
                     ->maxItems(5),
+                FileUpload::make('image_360')
+                    ->label('Foto 360 Derajat (Equirectangular)')
+                    ->image()
+                    ->maxSize(10240)
+                    ->disk('public')
+                    ->directory('news-images-360')
+                    ->helperText('Unggah foto panorama 360° berformat equirectangular (rasio 2:1). Lewati jika tidak ada.')
+                    ->columnSpanFull(),
+                TextInput::make('image_360_caption')
+                    ->label('Caption Foto 360')
+                    ->placeholder('Masukkan caption untuk foto 360 derajat ini...')
+                    ->maxLength(255)
+                    ->columnSpanFull(),
                 RichEditor::make('content')
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsDirectory('news-images')

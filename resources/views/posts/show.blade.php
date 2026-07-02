@@ -57,6 +57,22 @@
 @endsection
 
 @section('extra_css')
+    @if ($post->image_360)
+        <style>
+            #panorama-container {
+                width: 100%;
+                height: 350px;
+                border-radius: 12px;
+                overflow: hidden;
+                border: 1px solid #e5e7eb;
+            }
+            @media (min-width: 768px) {
+                #panorama-container {
+                    height: 500px;
+                }
+            }
+        </style>
+    @endif
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         .prose img {
@@ -142,23 +158,32 @@
             </div>
         </div>
 
-        @if ($post->image)
+        @php
+            $has360 = !empty($post->image_360);
+            $images = is_array($post->image) ? $post->image : ($post->image ? [$post->image] : []);
+            $captions = is_array($post->image_captions) ? $post->image_captions : [];
+            $totalMedia = ($has360 ? 1 : 0) + count($images);
+        @endphp
+
+        @if ($totalMedia > 0)
             <div class="max-w-6xl mx-auto px-4 mb-12">
-                @php
-                    $images = is_array($post->image) ? $post->image : [$post->image];
-                    $captions = is_array($post->image_captions) ? $post->image_captions : [];
-                @endphp
-                @if (count($images) > 1)
-                    <!-- Infinite Swiper.js Layout -->
+                @if ($totalMedia > 1)
+                    <!-- Unified Swiper Slider -->
                     <div class="relative group">
                         <div class="swiper mySwiper w-full aspect-[6/4] shadow-xl">
                             <div class="swiper-wrapper">
+                                @if ($has360)
+                                    <div class="swiper-slide w-full h-full bg-gray-100 flex items-center justify-center"
+                                         data-caption="{{ $post->image_360_caption ?? 'Foto 360°' }}">
+                                        <iframe src="{{ route('posts.embed-360', ['path' => $post->image_360]) }}" class="w-full h-full border-none swiper-no-swiping" loading="lazy" allowfullscreen></iframe>
+                                    </div>
+                                @endif
                                 @foreach ($images as $img)
                                     @php $caption = $captions[$img] ?? ''; @endphp
                                     <div class="swiper-slide w-full h-full bg-gray-100 flex items-center justify-center"
-                                        data-caption="{{ $caption }}">
+                                         data-caption="{{ $caption }}">
                                         <img src="{{ Storage::url($img) }}" alt="{{ $post->title }}"
-                                            class="w-full h-full object-contain">
+                                             class="w-full h-full object-contain">
                                     </div>
                                 @endforeach
                             </div>
@@ -171,7 +196,7 @@
                     <!-- Left-aligned Caption Below Swiper -->
                     <div id="swiper-caption" class="text-xs sm:text-sm text-gray-500 mt-3 text-center"></div>
 
-                    <!-- Swiper Initialization -->
+                    <!-- Scripts for Swiper -->
                     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
                     <script>
                         document.addEventListener('DOMContentLoaded', function() {
@@ -205,16 +230,38 @@
                         });
                     </script>
                 @else
-                    @php $caption = $captions[$images[0]] ?? ''; @endphp
-                    <div class="flex flex-col">
-                        <img src="{{ Storage::url($images[0]) }}" alt="{{ $post->title }}"
-                            class="w-full aspect-[6/4] object-cover shadow-xl bg-gray-100">
-                        @if ($caption)
-                            <div class="text-xs sm:text-sm text-gray-500 mt-3 text-left">
-                                {{ $caption }}
+                    <!-- Standalone Single Media -->
+                    @if ($has360)
+                        <div class="flex flex-col">
+                            <div id="panorama-container" class="w-full shadow-xl">
+                                <iframe src="{{ route('posts.embed-360', ['path' => $post->image_360]) }}" class="w-full h-full border-none" loading="lazy" allowfullscreen></iframe>
                             </div>
-                        @endif
-                    </div>
+                            @if ($post->image_360_caption)
+                                <div class="text-xs sm:text-sm text-gray-500 mt-3 text-left">
+                                    {{ $post->image_360_caption }}
+                                </div>
+                            @else
+                                <div class="text-xs sm:text-sm text-gray-500 mt-3 text-left flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-orange-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <span>Gunakan mouse/sentuhan untuk berputar melihat pemandangan 360°.</span>
+                                </div>
+                            @endif
+                        </div>
+                    @else
+                        @php $caption = $captions[$images[0]] ?? ''; @endphp
+                        <div class="flex flex-col">
+                            <img src="{{ Storage::url($images[0]) }}" alt="{{ $post->title }}"
+                                class="w-full aspect-[6/4] object-cover shadow-xl bg-gray-100">
+                            @if ($caption)
+                                <div class="text-xs sm:text-sm text-gray-500 mt-3 text-left">
+                                    {{ $caption }}
+                                </div>
+                            @endif
+                        </div>
+                    @endif
                 @endif
             </div>
         @endif
