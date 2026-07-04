@@ -7,7 +7,20 @@ use App\Http\Controllers\PostController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::view('/about', 'about')->name('about');
+use App\Models\StaticPage;
+
+Route::get('/about', function () {
+    $page = StaticPage::where('slug', 'about')->firstOrFail();
+    return view('about', compact('page'));
+})->name('about');
+
+Route::get('/page/{slug}', function ($slug) {
+    if ($slug === 'about') {
+        return redirect()->route('about');
+    }
+    $page = StaticPage::where('slug', $slug)->firstOrFail();
+    return view('about', compact('page'));
+})->name('static-page.show');
 
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
 

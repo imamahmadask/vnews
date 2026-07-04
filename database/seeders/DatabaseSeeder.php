@@ -24,6 +24,9 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        $this->call(DummyDataSeeder::class);
+        $this->call([
+            StaticPageSeeder::class,
+            DummyDataSeeder::class,
+        ]);
     }
 }
