@@ -144,7 +144,7 @@
         @if ($otherPosts && $otherPosts->count() > 0)
             {{-- Other Posts Grid --}}
             <div class="mb-16">
-                <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">Berita Terkini</h3>
+                <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">Terkini</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach ($otherPosts as $post)
                         <a href="{{ route('posts.show', $post->slug) }}" class="group block">
@@ -193,7 +193,7 @@
         @if ($topPosts && $topPosts->count() > 0)
             {{-- Top Posts --}}
             <div class="mb-16">
-                <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">Berita Terpopuler</h3>
+                <h3 class="text-2xl font-bold mb-6 border-b border-gray-200 pb-2">Terpopuler</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach ($topPosts as $post)
                         <a href="{{ route('posts.show', $post->slug) }}" class="group block">

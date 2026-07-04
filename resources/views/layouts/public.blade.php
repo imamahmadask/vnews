@@ -95,8 +95,6 @@
                             class="h-11 w-auto object-contain brightness-0 invert group-hover:opacity-75 transition-opacity duration-300">
                     </a>
                     <p class="text-sm text-white/45 leading-relaxed max-w-xs">
-                        Portal berita visual terdepan. Kami percaya satu foto mampu menceritakan kisah yang lebih dalam
-                        daripada ribuan kata.
                     </p>
                     <!-- Social icons -->
                     <div class="flex items-center gap-3 mt-1">
