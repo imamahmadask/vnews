@@ -193,7 +193,7 @@
                         </div>
                     </div>
 
-                    <!-- Left-aligned Caption Below Swiper -->
+                    <!-- Caption Below Swiper -->
                     <div id="swiper-caption" class="text-xs sm:text-sm text-gray-500 mt-3 text-center"></div>
 
                     <!-- Scripts for Swiper -->
@@ -237,11 +237,11 @@
                                 <iframe src="{{ route('posts.embed-360', ['path' => $post->image_360]) }}" class="w-full h-full border-none" loading="lazy" allowfullscreen></iframe>
                             </div>
                             @if ($post->image_360_caption)
-                                <div class="text-xs sm:text-sm text-gray-500 mt-3 text-left">
+                                <div class="text-xs sm:text-sm text-gray-500 mt-3 text-center">
                                     {{ $post->image_360_caption }}
                                 </div>
                             @else
-                                <div class="text-xs sm:text-sm text-gray-500 mt-3 text-left flex items-center gap-2">
+                                <div class="text-xs sm:text-sm text-gray-500 mt-3 text-center flex justify-center items-center gap-2">
                                     <svg class="w-4 h-4 text-orange-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -256,7 +256,7 @@
                             <img src="{{ Storage::url($images[0]) }}" alt="{{ $post->title }}"
                                 class="w-full aspect-[6/4] object-cover shadow-xl bg-gray-100">
                             @if ($caption)
-                                <div class="text-xs sm:text-sm text-gray-500 mt-3 text-left">
+                                <div class="text-xs sm:text-sm text-gray-500 mt-3 text-center">
                                     {{ $caption }}
                                 </div>
                             @endif
