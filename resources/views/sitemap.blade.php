@@ -16,7 +16,7 @@
     @foreach($categories as $category)
         <url>
             <loc>{{ route('category.show', $category->slug) }}</loc>
-            <lastmod>{{ $category->updated_at->tz('UTC')->toAtomString() }}</lastmod>
+            <lastmod>{{ ($category->updated_at ?? now())->tz('UTC')->toAtomString() }}</lastmod>
             <changefreq>weekly</changefreq>
             <priority>0.8</priority>
         </url>
@@ -25,7 +25,7 @@
     @foreach($posts as $post)
         <url>
             <loc>{{ route('posts.show', $post->slug) }}</loc>
-            <lastmod>{{ $post->updated_at->tz('UTC')->toAtomString() }}</lastmod>
+            <lastmod>{{ ($post->updated_at ?? now())->tz('UTC')->toAtomString() }}</lastmod>
             <changefreq>daily</changefreq>
             <priority>0.9</priority>
         </url>
