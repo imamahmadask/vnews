@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="StYM1sKESNQwJFWnPoB0bp9RWBW-JVOp8mmjEW76A-c" />
     <title>@yield('title', 'vnews.id - Berita Visual Indonesia')</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <link rel="canonical" href="{{ request()->url() }}">
