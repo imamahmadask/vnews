@@ -13,7 +13,7 @@ class SitemapController extends Controller
         $posts = Post::where('status', 'Published')->orderBy('created_at', 'desc')->get();
         $categories = Category::all();
 
-        return response()->view('sitemap', [
+        return response()->view('sitemap_xml', [
             'posts' => $posts,
             'categories' => $categories
         ])->header('Content-Type', 'text/xml');
